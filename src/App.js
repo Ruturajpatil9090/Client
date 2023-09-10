@@ -1,10 +1,9 @@
 import './App.css';
 import Header from "./Components/Header"
 import Home from "./Components/Home"
-// import frontend from './Components/Pages/Company/frontend';
-// import backend from "./Components/Pages/Company/backend"
 import { Route,Routes } from 'react-router-dom';
-import Index from "./Components/Pages/index"
+import Index from "./Components/Pages/index";
+import OrderDetail from './Components/OrderDetail/OrderDetail';
 
 function App() {
   return (
@@ -13,8 +12,8 @@ function App() {
       <Index/>
       <Routes>
         <Route path="/" Component={Home} />
+        <Route path="/orderdetail" Component={OrderDetail} />
       </Routes>
-      {/* <Home/> */}
     </div>
   );
 }
