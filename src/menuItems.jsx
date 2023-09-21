@@ -174,6 +174,12 @@ export const menuItems = [
     {
       title: 'Business Related',
       url: '/business',
+      submenu: [
+        {
+          title: 'Tender Purchase',
+          url: '/business/tender_utility',
+        },
+      ]
     },
     {
       title: 'Outword',

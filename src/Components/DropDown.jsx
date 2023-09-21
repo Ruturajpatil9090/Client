@@ -6,9 +6,6 @@ const Dropdown = ({ submenus,dropdown,depthLevel  }) => {
     return (
       <ul className={`dropdown ${dropdownClass} ${dropdown ? "show" : ""}`}>
         {submenus.map((submenu, index) => (
-          // <li key={index} className="menu-items">
-          //   <a href={submenu.url}>{submenu.title}</a>
-          // </li>
           <MenuItems items={submenu} key={index} depthLevel={depthLevel}  />
         ))}
       </ul>
