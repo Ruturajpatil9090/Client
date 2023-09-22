@@ -1,6 +1,6 @@
 import React from 'react'
 import CreateCompany from "./Company/CreateCompany";
-import TenderPurchase from "./BusinessRelated/TenderPurchase/TenderPurchase"
+import TenderPurchase from "./BusinessRelated/TenderPurchase/TenderPurchaseHead"
 import TenderUtility from "./BusinessRelated/TenderPurchase/TenderPurchaseUtility"
 import { Route,Routes } from 'react-router-dom';
 

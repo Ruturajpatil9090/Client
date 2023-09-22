@@ -121,3 +121,31 @@ header {
 .row-item.active {
   background-color: #d3d3d3;
 }
+
+
+/* select box style */
+/* CSS to style the form components and arrange them in a row */
+.row {
+  display: flex;
+  flex-direction: row;
+}
+
+.col-md-2 {
+  margin-right: 10px; /* Adjust the margin as needed */
+}
+
+.form-label {
+  font-weight: bold;
+  display: block;
+  margin-bottom: 5px;
+}
+
+.form-select {
+  width: 100%; /* Adjust the width as needed */
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  margin-bottom: 10px;
+}
+
+/* Adjust other styles as needed */

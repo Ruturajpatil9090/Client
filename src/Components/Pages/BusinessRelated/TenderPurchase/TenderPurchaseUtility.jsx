@@ -25,7 +25,7 @@ function GroupMasterDetail() {
   const [fetchedData, setFetchedData] = useState([]);
   const [perPage, setPerPage] = useState(15);
   const [currentPage, setCurrentPage] = useState(1);
-  const [filterValue, setFilterValue] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -51,8 +51,8 @@ function GroupMasterDetail() {
   };
 
   const handlePerPageChange = (event) => {
-    setPerPage(parseInt(event.target.value, 10)); // Parse value to integer
-    setCurrentPage(1); // Reset to the first page when changing per page count
+    setPerPage(parseInt(event.target.value, 10)); 
+    setCurrentPage(1); 
   };
 
   const handlePageChange = (pageNumber) => {
@@ -65,6 +65,19 @@ function GroupMasterDetail() {
     return fetchedData.slice(startIndex, endIndex);
   };
 
+  // const handleSearchTermChange = (event) => {
+  //   setSearchTerm(event.target.value);
+  //   setCurrentPage(1); // Reset to the first page when changing the search term
+  // };
+
+  // const getFilteredData = () => {
+  //   // Filter the fetched data based on the search term
+  //   return fetchedData.filter((post) =>
+  //     post.tenderdoname.toLowerCase().includes(searchTerm.toLowerCase())
+  //   );
+  // };
+
+
   return (
     <div className="App">
       <Button variant="contained" onClick={handleClick}>
@@ -73,24 +86,7 @@ function GroupMasterDetail() {
       <br />
       <br />
 
-      <div className="controls" style={{ float: "left", width: "150px" }}>
-        <FormControl>
-          <InputLabel id="filterSelect-label">Filter by Type:</InputLabel>
-          <Select
-            labelId="filterSelect-label"
-            id="filterSelect"
-            value={filterValue}
-            onChange={(e) => setFilterValue(e.target.value)}
-            style={{ marginLeft: "150px", alignItems: "center" }}
-          >
-            <MenuItem value="">Select Group_Type</MenuItem>
-            <MenuItem value="T">Type T</MenuItem>
-            <MenuItem value="B">Type B</MenuItem>
-            <MenuItem value="P">Type P</MenuItem>
-          </Select>
-        </FormControl>
-      </div>
-      <SearchBar value={""} onChange={() => {}} onSearchClick={() => {}} />
+      <SearchBar value={""} onChange={""} />
       <PerPageSelect value={perPage} onChange={handlePerPageChange} />
       <TableContainer>
         <h1>Posts Table</h1>
