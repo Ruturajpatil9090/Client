@@ -12,13 +12,43 @@ const TenderPurchaseHead = () => {
   // State for form data
   const [formData, setFormData] = useState({
     changeNo: "",
-    tenderdetail: "",
-    invoiceNo: "",
-    ackNo: "",
-    companyAddress: "",
-    state: "Choose...",
-    tdsCutByUs: false,
-    selectedDate: null,
+    Temptender: "",
+    AutoPurchaseBill: "",
+    Tender_Date: null,
+    Mill_Code: "",
+    season: "",
+    itemcode: "",
+    Grade: "",
+    Quantal: "",
+    Packing: "",
+    Bags: "",
+    Mill_Rate: "",
+    Purc_Rate: "",
+    Party_Bill_Rate: "",
+    Bp_Account: "",
+    CashDiff: "",
+    Payment_To: "",
+    Tender_From: "",
+    Tender_DO: "",
+    Voucher_By: "",
+    Broker: "",
+    Brokrage: "",
+    gstratecode: "",
+    Excise_Rate: "",
+    Sell_Note_No: "",
+    Narration: "",
+    TCS_Rate: "",
+    TCS_Amt: "",
+    TDS_Rate: "",
+
+    // changeNo: "",
+    // tenderdetail: "",
+    // invoiceNo: "",
+    // ackNo: "",
+    // companyAddress: "",
+    // state: "Choose...",
+    // tdsCutByUs: false,
+    // selectedDate: null,
   });
 
   const [data, setData] = useState([]);
@@ -33,6 +63,7 @@ const TenderPurchaseHead = () => {
     setFormData((prevData) => ({
       ...prevData,
       selectedDate: date,
+      
     }));
   };
 
@@ -67,7 +98,7 @@ const TenderPurchaseHead = () => {
 
   // Function to submit form data
   const submitFormData = () => {
-    // You can add logic here to submit the form data to your server.
+    
     console.log("Form Data Submitted:", formData);
   };
 
@@ -114,64 +145,235 @@ const TenderPurchaseHead = () => {
     console.log("next");
   };
 
+
+
   return (
     <div>
-      <div className="">
-        <br></br>
-      
-        <br></br>
+    <div className="">
+      <center>
+        <h4>Tender Purchase</h4>
+      </center>
+      <FormButtons
+        handleAddOne={handleAdd}
+        handleSaveOrUpdate={""}
+        handleEdit={handleEdit}
+        handleCancel={handleCancel}
+        handleBack={handleBack}
+        handleDelete={handleDelete}
+        handleFirst={handleFirst}
+        handlePrevious={handlePrevious}
+        handleNext={handleNext}
+        handleLast={handleLast}
+      />
+      <form className="row g-12" onSubmit={handleSubmit}>
+        <div className="col-md-1">
+          <label htmlFor="code" className="form-label">
+            Change NO:
+          </label>
+          <input
+            type="text"
+            className="form-control"
+            name="changeNo"
+            value={formData.changeNo}
+            onChange={handleChange}
+            autoComplete="off"
+          />
+        </div>
+        <div className="col-md-1">
+          <label htmlFor="companyName" className="form-label">
+            Copy From :
+          </label>
+          <input
+            type="text"
+            className="form-control"
+            // name="tenderdetail"
+            // value={formData.tenderdetail}
+            onChange={handleChange}
+            autoComplete="off"
+          />
+        </div>
+        <div class="col-md-1">
+          <label htmlFor="state" class="form-label">
+            Resale/Mill:
+          </label>
+          <select name="state" class="form-select" autoComplete="off">
+            <option value="R">Resale</option>
+            <option value="M">Mill</option>
+            <option value="W">With Payment</option>
+            <option value="P">Party Bill Rate</option>
+          </select>
+        </div>
 
-        <FormButtons
-          handleAddOne={handleAdd}
-          handleSaveOrUpdate={""}
-          handleEdit={handleEdit}
-          handleCancel={handleCancel}
-          handleBack={handleBack}
-          handleDelete={handleDelete}
-          handleFirst={handleFirst}
-          handlePrevious={handlePrevious}
-          handleNext={handleNext}
-          handleLast={handleLast}
-        />
-<br></br>
-        <form className="row g-12" onSubmit={handleSubmit}>
-          <div className="col-md-1">
-            <label htmlFor="code" className="form-label">
-              Change NO:
+        <div class="col-md-1">
+          <label htmlFor="state" class="form-label">
+            Temp Tender:
+          </label>
+          <select
+            name="tempTender"
+            class="form-select"
+            autoComplete="off"
+            value={FormData.Temptender}
+            onChange={handleChange}
+          >
+            <option value="Y">Yes</option>
+            <option value="N">No</option>
+          </select>
+        </div>
+
+        <div class="col-md-2">
+          <label htmlFor="autoPurchaseBill" class="form-label">
+            Auto Purchase Bill:
+          </label>
+          <select
+            name="autoPurchaseBill"
+            class="form-select"
+            autoComplete="off"
+            value={FormData.AutoPurchaseBill}
+            onChange={handleChange}
+          >
+            <option value="Y">Yes</option>
+            <option value="N">No</option>
+          </select>
+        </div>
+
+        <div className="col-md-1">
+          <label htmlFor="companyName" className="form-label">
+            Voucher No:
+          </label>
+          <p>{"1"}</p>
+        </div>
+        <div class="col-md-1">
+          <label htmlFor="autoPurchaseBill" class="form-label">
+            Date :
+          </label>
+
+          <CustomDatePicker
+            selectedDate={formData.Tender_Date}
+            onChange={handleDateChange}
+          />
+        </div>
+        <div class="col-md-1">
+          {/* select date */}
+          <label htmlFor="autoPurchaseBill" class="form-label">
+            Payment Date:
+          </label>
+
+          <CustomDatePicker
+            selectedDate={formData.selectedDate}
+            onChange={handleDateChange}
+          />
+        </div>
+        <div class="row">
+          <div class="input-group mb-2" style={{ "max-width": "200px" }}>
+            <label htmlFor="companyName" className="form-label">
+              Mill Code:
             </label>
             <input
               type="text"
-              className="form-control"
-              name="changeNo"
-              value={formData.changeNo}
-              onChange={handleChange}
-              autoComplete="off"
+              class="form-control"
+              placeholder=""
+              aria-label="Example text with button addon"
+              aria-describedby="button-addon1"
+              value={selectedRecord ? selectedRecord.id : ""}
+              style={{ width: "70%" }}
             />
+            <DataTableModal
+              showModal={showModal}
+              onClose={handleClose}
+              data={data}
+              onRecordClick={handleRecordClick}
+            />
+            <button
+              class="btn btn-outline-secondary"
+              type="button"
+              id="button-addon1"
+              onClick={fetchData}
+            >
+              ...
+            </button>
+            <p style={{ "margin-left": "10px" }}>{selectedTitle}</p>
           </div>
           <div className="col-md-1">
             <label htmlFor="companyName" className="form-label">
-              Tender DetailId:
+              Season:
             </label>
             <input
               type="text"
               className="form-control"
               name="tenderdetail"
-              value={formData.tenderdetail}
+              value={formData.season}
               onChange={handleChange}
               autoComplete="off"
             />
           </div>
+          <div class="input-group mb-2" style={{ "max-width": "200px" }}>
+            <label htmlFor="companyName" className="form-label">
+              Item Code:
+            </label>
+            <input
+              type="text"
+              class="form-control"
+              placeholder=""
+              aria-label="Example text with button addon"
+              aria-describedby="button-addon1"
+              value={selectedRecord ? selectedRecord.id : ""}
+              style={{ width: "70%" }}
+            />
+            <DataTableModal
+              showModal={showModal}
+              onClose={handleClose}
+              data={data}
+              onRecordClick={handleRecordClick}
+            />
+            <button
+              class="btn btn-outline-secondary"
+              type="button"
+              id="button-addon1"
+              onClick={fetchData}
+            >
+              ...
+            </button>
+            <p style={{ "margin-left": "10px" }}>{selectedTitle}</p>
+          </div>
+
+          <div class="input-group mb-2" style={{ "max-width": "200px" }}>
+            <h5>Grade:</h5>
+            <input
+              type="text"
+              class="form-control"
+              placeholder=""
+              aria-label="Example text with button addon"
+              aria-describedby="button-addon1"
+              value={selectedRecord ? selectedRecord.Grade : ""}
+              style={{ width: "70%" }}
+            />
+            <DataTableModal
+              showModal={showModal}
+              onClose={handleClose}
+              data={data}
+              onRecordClick={handleRecordClick}
+            />
+            <button
+              class="btn btn-outline-secondary"
+              type="button"
+              id="button-addon1"
+              onClick={fetchData}
+            >
+              ...
+            </button>
+            <p style={{ "margin-left": "10px" }}>{selectedTitle}</p>
+          </div>
 
           <div className="col-md-1">
             <label htmlFor="companyName" className="form-label">
-              Quantale
+              Quantal:
             </label>
             <input
               type="text"
               className="form-control"
               name="tenderdetail"
-              // value={formData.tenderdetail}
-              // onChange={handleChange}
+              value={formData.Quantal}
+              onChange={handleChange}
               autoComplete="off"
             />
           </div>
@@ -184,8 +386,8 @@ const TenderPurchaseHead = () => {
               type="text"
               className="form-control"
               name="tenderdetail"
-              // value={formData.tenderdetail}
-              // onChange={handleChange}
+              value={formData.Packing}
+              onChange={handleChange}
               autoComplete="off"
             />
           </div>
@@ -198,22 +400,29 @@ const TenderPurchaseHead = () => {
               type="text"
               className="form-control"
               name="tenderdetail"
-              // value={formData.tenderdetail}
-              // onChange={handleChange}
+              value={formData.Bags}
+              onChange={handleChange}
               autoComplete="off"
             />
           </div>
 
           <div className="col-md-1">
             <label htmlFor="companyName" className="form-label">
-              Party Bill Rate
+              Balance Self:
+            </label>
+            <p>{"0"}</p>
+          </div>
+
+          <div className="col-md-1">
+            <label htmlFor="companyName" className="form-label">
+              Mill Rate:
             </label>
             <input
               type="text"
               className="form-control"
               name="tenderdetail"
-              // value={formData.tenderdetail}
-              // onChange={handleChange}
+              value={formData.Mill_Rate}
+              onChange={handleChange}
               autoComplete="off"
             />
           </div>
@@ -226,24 +435,234 @@ const TenderPurchaseHead = () => {
               type="text"
               className="form-control"
               name="tenderdetail"
-              // value={formData.tenderdetail}
-              // onChange={handleChange}
+              value={formData.Purc_Rate}
+              onChange={handleChange}
               autoComplete="off"
             />
           </div>
+        </div>
 
+        <div class="row">
           <div className="col-md-1">
             <label htmlFor="companyName" className="form-label">
-              Mill Rate:
+              Party Bill Rate
             </label>
             <input
               type="text"
               className="form-control"
               name="tenderdetail"
-              // value={formData.tenderdetail}
-              // onChange={handleChange}
+              value={formData.Party_Bill_Rate}
+              onChange={handleChange}
               autoComplete="off"
             />
+          </div>
+
+          <div class="input-group mb-2" style={{ "max-width": "200px" }}>
+            <label htmlFor="companyName" className="form-label">
+              Bp Account:
+            </label>
+            <input
+              type="text"
+              class="form-control"
+              placeholder=""
+              aria-label="Example text with button addon"
+              aria-describedby="button-addon1"
+              value={selectedRecord ? selectedRecord.Bp_Account : ""}
+              style={{ width: "70%" }}
+            />
+            <DataTableModal
+              showModal={showModal}
+              onClose={handleClose}
+              data={data}
+              onRecordClick={handleRecordClick}
+            />
+            <button
+              class="btn btn-outline-secondary"
+              type="button"
+              id="button-addon1"
+              onClick={fetchData}
+            >
+              ...
+            </button>
+            <p style={{ "margin-left": "10px" }}>{selectedTitle}</p>
+          </div>
+          <div className="col-md-1">
+            <label htmlFor="companyName" className="form-label">
+              B.P:
+            </label>
+            <input
+              type="text"
+              className="form-control"
+              name="tenderdetail"
+              value={formData.CashDiff}
+              onChange={handleChange}
+              autoComplete="off"
+            />
+          </div>
+          <div className="col-md-1">
+            <label htmlFor="companyName" className="form-label">
+              Diff:
+            </label>
+            <p>{"0"}</p>
+          </div>
+
+          <div className="col-md-1">
+            <label htmlFor="companyName" className="form-label">
+              Amount:
+            </label>
+            <p>{"0"}</p>
+          </div>
+
+          <div class="input-group mb-2" style={{ "max-width": "200px" }}>
+            <label htmlFor="companyName" className="form-label">
+              Payment To:
+            </label>
+            <input
+              type="text"
+              class="form-control"
+              placeholder=""
+              aria-label="Example text with button addon"
+              aria-describedby="button-addon1"
+              value={selectedRecord ? selectedRecord.Payment_To : ""}
+              style={{ width: "70%" }}
+            />
+            <DataTableModal
+              showModal={showModal}
+              onClose={handleClose}
+              data={data}
+              onRecordClick={handleRecordClick}
+            />
+            <button
+              class="btn btn-outline-secondary"
+              type="button"
+              id="button-addon1"
+              onClick={fetchData}
+            >
+              ...
+            </button>
+            <p style={{ "margin-left": "10px" }}>{selectedTitle}</p>
+          </div>
+
+          <div class="input-group mb-2" style={{ "max-width": "200px" }}>
+            <label htmlFor="companyName" className="form-label">
+              Tender From:
+            </label>
+            <input
+              type="text"
+              class="form-control"
+              placeholder=""
+              aria-label="Example text with button addon"
+              aria-describedby="button-addon1"
+              value={selectedRecord ? selectedRecord.Tender_From : ""}
+              style={{ width: "70%" }}
+            />
+            <DataTableModal
+              showModal={showModal}
+              onClose={handleClose}
+              data={data}
+              onRecordClick={handleRecordClick}
+            />
+            <button
+              class="btn btn-outline-secondary"
+              type="button"
+              id="button-addon1"
+              onClick={fetchData}
+            >
+              ...
+            </button>
+            <p style={{ "margin-left": "10px" }}>{selectedTitle}</p>
+          </div>
+
+          <div class="input-group mb-2" style={{ "max-width": "200px" }}>
+            <label htmlFor="companyName" className="form-label">
+              Tender D.O.:
+            </label>
+            <input
+              type="text"
+              class="form-control"
+              placeholder=""
+              aria-label="Example text with button addon"
+              aria-describedby="button-addon1"
+              value={selectedRecord ? selectedRecord.Tender_DO : ""}
+              style={{ width: "70%" }}
+            />
+            <DataTableModal
+              showModal={showModal}
+              onClose={handleClose}
+              data={data}
+              onRecordClick={handleRecordClick}
+            />
+            <button
+              class="btn btn-outline-secondary"
+              type="button"
+              id="button-addon1"
+              onClick={fetchData}
+            >
+              ...
+            </button>
+            <p style={{ "margin-left": "10px" }}>{selectedTitle}</p>
+          </div>
+
+          <div class="input-group mb-2" style={{ "max-width": "200px" }}>
+            <label htmlFor="companyName" className="form-label">
+              Voucher By:
+            </label>
+            <input
+              type="text"
+              class="form-control"
+              placeholder=""
+              aria-label="Example text with button addon"
+              aria-describedby="button-addon1"
+              value={selectedRecord ? selectedRecord.Voucher_By : ""}
+              style={{ width: "70%" }}
+            />
+            <DataTableModal
+              showModal={showModal}
+              onClose={handleClose}
+              data={data}
+              onRecordClick={handleRecordClick}
+            />
+            <button
+              class="btn btn-outline-secondary"
+              type="button"
+              id="button-addon1"
+              onClick={fetchData}
+            >
+              ...
+            </button>
+            <p style={{ "margin-left": "10px" }}>{selectedTitle}</p>
+          </div>
+        </div>
+
+        <div className="row">
+          <div class="input-group mb-2" style={{ "max-width": "200px" }}>
+            <label htmlFor="companyName" className="form-label">
+              Broker:
+            </label>
+            <input
+              type="text"
+              class="form-control"
+              placeholder=""
+              aria-label="Example text with button addon"
+              aria-describedby="button-addon1"
+              value={selectedRecord ? selectedRecord.Broker : ""}
+              style={{ width: "70%" }}
+            />
+            <DataTableModal
+              showModal={showModal}
+              onClose={handleClose}
+              data={data}
+              onRecordClick={handleRecordClick}
+            />
+            <button
+              class="btn btn-outline-secondary"
+              type="button"
+              id="button-addon1"
+              onClick={fetchData}
+            >
+              ...
+            </button>
+            <p style={{ "margin-left": "10px" }}>{selectedTitle}</p>
           </div>
 
           <div className="col-md-1">
@@ -254,38 +673,89 @@ const TenderPurchaseHead = () => {
               type="text"
               className="form-control"
               name="tenderdetail"
-              // value={formData.tenderdetail}
-              // onChange={handleChange}
+              value={formData.Brokrage}
+              onChange={handleChange}
+              autoComplete="off"
+            />
+          </div>
+
+          <div class="input-group mb-2" style={{ "max-width": "200px" }}>
+            <label htmlFor="companyName" className="form-label">
+              GstRateCode:
+            </label>
+            <input
+              type="text"
+              class="form-control"
+              placeholder=""
+              aria-label="Example text with button addon"
+              aria-describedby="button-addon1"
+              value={selectedRecord ? selectedRecord.gstratecode : ""}
+              style={{ width: "70%" }}
+            />
+            <DataTableModal
+              showModal={showModal}
+              onClose={handleClose}
+              data={data}
+              onRecordClick={handleRecordClick}
+            />
+            <button
+              class="btn btn-outline-secondary"
+              type="button"
+              id="button-addon1"
+              onClick={fetchData}
+            >
+              ...
+            </button>
+            <p style={{ "margin-left": "10px" }}>{selectedTitle}</p>
+          </div>
+
+          <div className="col-md-1">
+            <label htmlFor="companyName" className="form-label">
+              Exc/GST Rate:
+            </label>
+            <input
+              type="text"
+              className="form-control"
+              name="tenderdetail"
+              value={formData.Excise_Rate}
+              onChange={handleChange}
               autoComplete="off"
             />
           </div>
 
           <div className="col-md-1">
             <label htmlFor="companyName" className="form-label">
-            Ex/GST Rate:
+              GST Rate:
+            </label>
+            <p>{""}</p>
+          </div>
+
+          <div className="col-md-2">
+            <label htmlFor="companyName" className="form-label">
+              value SellNoteNo:
             </label>
             <input
               type="text"
               className="form-control"
               name="tenderdetail"
-              // value={formData.tenderdetail}
-              // onChange={handleChange}
+              value={formData.Sell_Note_No}
+              onChange={handleChange}
               autoComplete="off"
             />
           </div>
 
-          <div className="col-md-1">
-            <label htmlFor="companyName" className="form-label">
-              Sell Note No:
+          <div className="col-2">
+            <label htmlFor="companyAddress" className="form-label">
+              Narration:
             </label>
-            <input
-              type="text"
+            <textarea
               className="form-control"
-              name="tenderdetail"
-              // value={formData.tenderdetail}
-              // onChange={handleChange}
+              placeholder="Company Address"
+              name="companyAddress"
+              value={formData.Narration}
+              onChange={handleChange}
               autoComplete="off"
-            />
+            ></textarea>
           </div>
 
           <div className="col-md-1">
@@ -296,12 +766,14 @@ const TenderPurchaseHead = () => {
               type="text"
               className="form-control"
               name="tenderdetail"
-              // value={formData.tenderdetail}
-              // onChange={handleChange}
+              value={formData.TCS_Rate}
+              onChange={handleChange}
               autoComplete="off"
             />
           </div>
+        </div>
 
+        <div className="row">
           <div className="col-md-1">
             <label htmlFor="companyName" className="form-label">
               TCS Amount:
@@ -310,36 +782,29 @@ const TenderPurchaseHead = () => {
               type="text"
               className="form-control"
               name="tenderdetail"
-              // value={formData.tenderdetail}
-              // onChange={handleChange}
+              value={formData.TCS_Amt}
+              onChange={handleChange}
               autoComplete="off"
             />
           </div>
 
           <div className="col-md-1">
             <label htmlFor="companyName" className="form-label">
-              TCSAmt: TDS%:
+              Value with TCSAmt:
             </label>
-            <input
-              type="text"
-              className="form-control"
-              name="tenderdetail"
-              // value={formData.tenderdetail}
-              // onChange={handleChange}
-              autoComplete="off"
-            />
+            <p>{""}</p>
           </div>
 
           <div className="col-md-1">
             <label htmlFor="companyName" className="form-label">
-              TDS Amount:
+              TDS%:
             </label>
             <input
               type="text"
               className="form-control"
               name="tenderdetail"
-              // value={formData.tenderdetail}
-              // onChange={handleChange}
+              value={formData.TDS_Rate}
+              onChange={handleChange}
               autoComplete="off"
             />
           </div>
@@ -371,171 +836,20 @@ const TenderPurchaseHead = () => {
               autoComplete="off"
             />
           </div>
-
-          <div className="col-md-1">
-            <label htmlFor="regionalName" className="form-label">
-              Invoice NO:
-            </label>
-            <input
-              type="text"
-              className="form-control"
-              name="invoiceNo"
-              value={formData.invoiceNo}
-              onChange={handleChange}
-              autoComplete="off"
-            />
-          </div>
-
-          <div className="col-1">
-            <label htmlFor="companyAddress" className="form-label">
-              Narration:
-            </label>
-            <textarea
-              className="form-control"
-              placeholder="Company Address"
-              name="companyAddress"
-              value={formData.companyAddress}
-              onChange={handleChange}
-              autoComplete="off"
-            ></textarea>
-          </div>
-          <div class="row">
-            <div class="col-md-1">
-              <label htmlFor="state" class="form-label">
-                Resale/Mill
-              </label>
-              <select name="state" class="form-select" autoComplete="off">
-                <option value="Option1">Resale</option>
-                <option value="Option2">Mill</option>
-                <option value="Option1">With Payment</option>
-                <option value="Option2">Party Bill Rate</option>
-              </select>
-            </div>
-
-            <div class="col-md-1">
-              <label htmlFor="tempTender" class="form-label">
-                Temp Tender:
-              </label>
-              <select name="tempTender" class="form-select" autoComplete="off">
-                <option value="Option1">YES</option>
-                <option value="Option2">NO</option>
-              </select>
-            </div>
-
-            <div class="col-md-1">
-              <label htmlFor="autoPurchaseBill" class="form-label">
-                AutoPurchaseBill:
-              </label>
-              <select
-                name="autoPurchaseBill"
-                class="form-select"
-                autoComplete="off"
-              >
-                <option value="Option1">YES</option>
-                <option value="Option2">NO</option>
-              </select>
-            </div>
-
-            <div class="col-md-1">
-              <label>Date :</label>
-
-              <CustomDatePicker
-                selectedDate={formData.selectedDate}
-                onChange={handleDateChange}
-              />
-
-              {/* select date */}
-              <label>Select Date :</label>
-
-              <CustomDatePicker
-                selectedDate={formData.selectedDate}
-                onChange={handleDateChange}
-              />
-            </div>
-
-            <div>
-              <label>
-                TDS Cut by Us:
-                <input
-                  type="checkbox"
-                  name="tdsCutByUs"
-                  checked={formData.tdsCutByUs}
-                  onChange={handleChange}
-                />
-              </label>
-            </div>
-          </div>
-
-          <div className="button" style={{ "margin-top": "40px" }}>
-            <div class="input-group mb-2" style={{ "max-width": "200px" }}>
-              <input
-                type="text"
-                class="form-control"
-                placeholder=""
-                aria-label="Example text with button addon"
-                aria-describedby="button-addon1"
-                value={selectedRecord ? selectedRecord.id : ""}
-                style={{ width: "70%" }}
-              />
-              <DataTableModal
-                showModal={showModal}
-                onClose={handleClose}
-                data={data}
-                onRecordClick={handleRecordClick}
-              />
-              <button
-                class="btn btn-outline-secondary"
-                type="button"
-                id="button-addon1"
-                onClick={fetchData}
-              >
-                ...
-              </button>
-              <p style={{ "margin-left": "10px" }}>{selectedTitle}</p>
-            </div>
-
-            {/* f1  */}
-            <div class="input-group mb-2" style={{ "max-width": "200px" }}>
-              <input
-                type="text"
-                class="form-control"
-                placeholder=""
-                aria-label="Example text with button addon"
-                aria-describedby="button-addon1"
-                value={selectedRecord ? selectedRecord.id : ""}
-                style={{ width: "70%" }}
-              />
-              <DataTableModal
-                showModal={showModal}
-                onClose={handleClose}
-                data={data}
-                onRecordClick={handleRecordClick}
-              />
-              <button
-                class="btn btn-outline-secondary"
-                type="button"
-                id="button-addon1"
-                onClick={fetchData}
-              >
-                ...
-              </button>
-              <p>{selectedTitle}</p>
-            </div>
-
-            <br></br>
-            <br></br>
-            <button
-              type="submit"
-              className="btn btn-primary"
-              onClick={submitFormData}
-            >
-              Save
-            </button>
-          </div>
-        </form>
-        <TenderPurchaseDetail/>
-      </div>
+        </div>
+        <div className="button" style={{ "margin-top": "40px" }}>
+          <button
+            type="submit"
+            className="btn btn-primary"
+            onClick={submitFormData}
+          >
+            Save
+          </button>
+        </div>
+      </form>
+      <TenderPurchaseDetail />
     </div>
+  </div>
   );
 };
 

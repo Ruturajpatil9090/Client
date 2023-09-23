@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import CustomDatePicker from "../../../common/DateRangePicker";
 import axios from "axios";
 import DataTableModal from "../../../common/DataTableModal";
@@ -23,10 +23,8 @@ const TenderPurchaseDetail = () => {
   const [selectedTitle, setSelectedTitle] = useState("");
 
   const [displayedData, setDisplayedData] = useState([]);
-  const [editIndex, setEditIndex] = useState(null);
 
-  
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const handleDateChange = (date) => {
     setFormData((prevData) => ({
@@ -43,44 +41,8 @@ const TenderPurchaseDetail = () => {
     }));
   };
 
-//   const handleSubmit = (e) => {
-//     e.preventDefault();
-//     const updatedData = [...displayedData, formData];
-//     setDisplayedData(updatedData);
-//     console.log("Form Data Submitted:", formData);
-//   };
-
-
-
-const handleSubmit = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-
-    const updatedData = [...displayedData];
-
-    if (editIndex !== null) {
-      // Update existing record
-      updatedData[editIndex] = formData;
-      setEditIndex(null);
-    } else {
-      // Add new record
-      updatedData.push(formData);
-    }
-
-    setDisplayedData(updatedData);
-    resetFormData(); // Reset form data after submitting
-  };
-
-  const resetFormData = () => {
-    setFormData({
-      changeNo: "",
-      tenderdetail: "",
-      invoiceNo: "",
-      ackNo: "",
-      companyAddress: "",
-      state: "Choose...",
-      tdsCutByUs: false,
-      selectedDate: null,
-    });
   };
 
   const fetchData = async () => {
@@ -96,14 +58,31 @@ const handleSubmit = (e) => {
   };
 
   const submitFormData = () => {
-    console.log("Form Data Submitted:", formData);
+    const newData = {
+      ...formData,
+      id: Date.now(),
+      billingTo: selectedRecord ? selectedRecord.id : "",
+    };
+
+    setDisplayedData((prevData) => [...prevData, newData]);
+
+    setFormData({
+      changeNo: "",
+      tenderdetail: "",
+      invoiceNo: "",
+      ackNo: "",
+      companyAddress: "",
+      state: "Choose...",
+      tdsCutByUs: false,
+      selectedDate: null,
+    });
   };
 
   const handleRecordClick = (record) => {
     setSelectedRecord(record);
     setFormData((prevData) => ({
       ...prevData,
-      id: record.id,
+      title: record.title,
     }));
     setSelectedTitle(record.title);
   };
@@ -112,19 +91,21 @@ const handleSubmit = (e) => {
     setShowModal(false);
   };
 
-
   const handleEdit = (index) => {
-    setFormData({ ...displayedData[index] });
-    setEditIndex(index);
-  };
-
-  // Modified handleDelete function to delete the selected record
-  const handleDelete = (index) => {
     const updatedData = [...displayedData];
+    const editedRecord = updatedData[index];
+    setFormData({ ...editedRecord });
+
     updatedData.splice(index, 1);
     setDisplayedData(updatedData);
+    setShowModal(false);
   };
 
+  const handleDelete = (recordToDelete) => {
+    setDisplayedData((prevData) =>
+      prevData.filter((record) => record !== recordToDelete)
+    );
+  };
 
   const formatDate = (date) => {
     if (!date) return "";
@@ -132,136 +113,43 @@ const handleSubmit = (e) => {
     return date.toLocaleDateString(undefined, options);
   };
 
+  // f1 key press
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.key === "F1") {
+        event.preventDefault();
+        fetchData();
+        setShowModal(true);
+      }
+    };
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
+
   return (
     <div>
       <div className="">
-        <br />
-        <h2 style={{ alignItems: "center" }}>Tender Purchase Detail</h2>
-        <br />
+        
+        <h4 style={{ alignItems: "center" }}>Tender Purchase Detail</h4>
+      
         <button type="button" className="btn btn-primary">
           Add
         </button>
-        <button type="button" className="btn btn-danger">
+        <button type="button" className="btn btn-danger" style={{"marginLeft":"10px"}}>
           Cancel
         </button>
         <form className="row g-12" onSubmit={handleSubmit}>
-          <div className="col-md-2">
-            <label htmlFor="changeNo" className="form-label">
-              Buyer Quantal:
-            </label>
-            <input
-              type="text"
-              className="form-control"
-              name="changeNo"
-              value={formData.changeNo}
-              onChange={handleChange}
-              autoComplete="off"
-            />
-          </div>
-
-          <div className="col-md-2">
-            <label htmlFor="tenderdetail" className="form-label">
-              Tender Detail:
-            </label>
-            <input
-              type="text"
-              className="form-control"
-              name="tenderdetail"
-              value={formData.tenderdetail}
-              onChange={handleChange}
-              autoComplete="off"
-            />
-          </div>
-
-          <div className="col-md-2">
-            <label htmlFor="invoiceNo" className="form-label">
-              Invoice No:
-            </label>
-            <input
-              type="text"
-              className="form-control"
-              name="invoiceNo"
-              value={formData.invoiceNo}
-              onChange={handleChange}
-              autoComplete="off"
-            />
-          </div>
-
-          <div className="col-md-2">
-            <label htmlFor="ackNo" className="form-label">
-              Acknowledgment No:
-            </label>
-            <input
-              type="text"
-              className="form-control"
-              name="ackNo"
-              value={formData.ackNo}
-              onChange={handleChange}
-              autoComplete="off"
-            />
-          </div>
-
-          <div className="col-md-2">
-            <label htmlFor="companyAddress" className="form-label">
-              Company Address:
-            </label>
-            <input
-              type="text"
-              className="form-control"
-              name="companyAddress"
-              value={formData.companyAddress}
-              onChange={handleChange}
-              autoComplete="off"
-            />
-          </div>
-
-          <div className="col-md-2">
-            <label htmlFor="state" className="form-label">
-              Delivery Type:
-            </label>
-            <select
-              name="state"
-              className="form-select"
-              autoComplete="off"
-              value={formData.state}
-              onChange={handleChange}
-            >
-              <option value="Choose...">Choose...</option>
-              <option value="With GST Naka Delivery">
-                With GST Naka Delivery
-              </option>
-              <option value="Naka Delivery Without Gst Rate">
-                Naka Delivery Without Gst Rate
-              </option>
-              <option value="Commission">Commission</option>
-              <option value="DO">DO</option>
-            </select>
-          </div>
-
-          <div className="col-md-2">
-            <label>Date :</label>
-            <CustomDatePicker
-              selectedDate={formData.selectedDate}
-              onChange={handleDateChange}
-            />
-          </div>
-
-          <div className="col-md-2">
-            <label>Loading By Us:</label>
-            <input
-              type="checkbox"
-              name="tdsCutByUs"
-              checked={formData.tdsCutByUs}
-              onChange={handleChange}
-            />
-          </div>
-
-          <div className="button" style={{ marginTop: "40px" }}>
-            <div className="input-group mb-2" style={{ maxWidth: "200px" }}>
-              <label>Billing TO:</label>
+          <div class="row">
+            <div class="input-group mb-2" style={{ "max-width": "200px" }}>
+              <label htmlFor="companyName" className="form-label">
+                Mill Code:
+              </label>
               <input
                 type="text"
-                className="form-control"
+                class="form-control"
                 placeholder=""
                 aria-label="Example text with button addon"
                 aria-describedby="button-addon1"
@@ -275,18 +163,310 @@ const handleSubmit = (e) => {
                 onRecordClick={handleRecordClick}
               />
               <button
-                className="btn btn-outline-secondary"
+                class="btn btn-outline-secondary"
                 type="button"
                 id="button-addon1"
                 onClick={fetchData}
               >
                 ...
               </button>
-              <p style={{ marginLeft: "10px" }}>{selectedTitle}</p>
+              <p style={{ "margin-left": "10px" }}>{selectedTitle}</p>
             </div>
 
-            <br />
-            <br />
+            <div class="input-group mb-2" style={{ "max-width": "200px" }}>
+              <label htmlFor="companyName" className="form-label">
+                Item Code:
+              </label>
+              <input
+                type="text"
+                class="form-control"
+                placeholder=""
+                aria-label="Example text with button addon"
+                aria-describedby="button-addon1"
+                value={selectedRecord ? selectedRecord.id : ""}
+                style={{ width: "70%" }}
+              />
+              <DataTableModal
+                showModal={showModal}
+                onClose={handleClose}
+                data={data}
+                onRecordClick={handleRecordClick}
+              />
+              <button
+                class="btn btn-outline-secondary"
+                type="button"
+                id="button-addon1"
+                onClick={fetchData}
+              >
+                ...
+              </button>
+              <p style={{ "margin-left": "10px" }}>{selectedTitle}</p>
+            </div>
+
+            <div class="col-md-1">
+              <label htmlFor="state" class="form-label">
+                Resale/Mill:
+              </label>
+              <select name="state" class="form-select" autoComplete="off">
+                <option value="R">Resale</option>
+                <option value="M">Mill</option>
+                <option value="W">With Payment</option>
+                <option value="P">Party Bill Rate</option>
+              </select>
+            </div>
+
+            <div class="input-group mb-2" style={{ "max-width": "200px" }}>
+              <h5>Grade:</h5>
+              <input
+                type="text"
+                class="form-control"
+                placeholder=""
+                aria-label="Example text with button addon"
+                aria-describedby="button-addon1"
+                value={selectedRecord ? selectedRecord.Grade : ""}
+                style={{ width: "70%" }}
+              />
+              <DataTableModal
+                showModal={showModal}
+                onClose={handleClose}
+                data={data}
+                onRecordClick={handleRecordClick}
+              />
+              <button
+                class="btn btn-outline-secondary"
+                type="button"
+                id="button-addon1"
+                onClick={fetchData}
+              >
+                ...
+              </button>
+              <p style={{ "margin-left": "10px" }}>{selectedTitle}</p>
+            </div>
+
+            <div class="input-group mb-2" style={{ "max-width": "200px" }}>
+              <h5>Grade:</h5>
+              <input
+                type="text"
+                class="form-control"
+                placeholder=""
+                aria-label="Example text with button addon"
+                aria-describedby="button-addon1"
+                value={selectedRecord ? selectedRecord.Grade : ""}
+                style={{ width: "70%" }}
+              />
+              <DataTableModal
+                showModal={showModal}
+                onClose={handleClose}
+                data={data}
+                onRecordClick={handleRecordClick}
+              />
+              <button
+                class="btn btn-outline-secondary"
+                type="button"
+                id="button-addon1"
+                onClick={fetchData}
+              >
+                ...
+              </button>
+              <p style={{ "margin-left": "10px" }}>{selectedTitle}</p>
+            </div>
+
+            <div className="col-md-1">
+              <label htmlFor="companyName" className="form-label">
+                Quantal:
+              </label>
+              <input
+                type="text"
+                className="form-control"
+                name="tenderdetail"
+                value={formData.Quantal}
+                onChange={handleChange}
+                autoComplete="off"
+              />
+            </div>
+
+            <div className="col-md-1">
+              <label htmlFor="companyName" className="form-label">
+                Packing
+              </label>
+              <input
+                type="text"
+                className="form-control"
+                name="tenderdetail"
+                value={formData.Packing}
+                onChange={handleChange}
+                autoComplete="off"
+              />
+            </div>
+
+            <div className="col-md-1">
+              <label htmlFor="companyName" className="form-label">
+                Bags
+              </label>
+              <input
+                type="text"
+                className="form-control"
+                name="tenderdetail"
+                value={formData.Bags}
+                onChange={handleChange}
+                autoComplete="off"
+              />
+            </div>
+
+            <div class="input-group mb-2" style={{ "max-width": "200px" }}>
+              <h5>Grade:</h5>
+              <input
+                type="text"
+                class="form-control"
+                placeholder=""
+                aria-label="Example text with button addon"
+                aria-describedby="button-addon1"
+                value={selectedRecord ? selectedRecord.Grade : ""}
+                style={{ width: "70%" }}
+              />
+              <DataTableModal
+                showModal={showModal}
+                onClose={handleClose}
+                data={data}
+                onRecordClick={handleRecordClick}
+              />
+              <button
+                class="btn btn-outline-secondary"
+                type="button"
+                id="button-addon1"
+                onClick={fetchData}
+              >
+                ...
+              </button>
+              <p style={{ "margin-left": "10px" }}>{selectedTitle}</p>
+            </div>
+
+            <div className="col-md-1">
+              <label htmlFor="companyName" className="form-label">
+                Mill Rate:
+              </label>
+              <input
+                type="text"
+                className="form-control"
+                name="tenderdetail"
+                value={formData.Mill_Rate}
+                onChange={handleChange}
+                autoComplete="off"
+              />
+            </div>
+          </div>
+
+          <div className="row">
+            <div className="col-2">
+              <label htmlFor="companyAddress" className="form-label">
+                Narration:
+              </label>
+              <textarea
+                className="form-control"
+                placeholder="Company Address"
+                name="companyAddress"
+                value={formData.Narration}
+                onChange={handleChange}
+                autoComplete="off"
+              ></textarea>
+            </div>
+
+            <div class="col-md-1">
+              <label htmlFor="autoPurchaseBill" class="form-label">
+                Date :
+              </label>
+
+              <CustomDatePicker
+                selectedDate={formData.Tender_Date}
+                onChange={handleDateChange}
+              />
+            </div>
+            <div class="col-md-1">
+              {/* select date */}
+              <label htmlFor="autoPurchaseBill" class="form-label">
+                Payment Date:
+              </label>
+
+              <CustomDatePicker
+                selectedDate={formData.selectedDate}
+                onChange={handleDateChange}
+              />
+            </div>
+
+            <div className="col-md-1">
+              <label htmlFor="companyName" className="form-label">
+                Mill Rate:
+              </label>
+              <input
+                type="text"
+                className="form-control"
+                name="tenderdetail"
+                value={formData.Mill_Rate}
+                onChange={handleChange}
+                autoComplete="off"
+              />
+            </div>
+
+            <div className="col-md-1">
+              <label htmlFor="companyName" className="form-label">
+                <br></br>
+              </label>
+              <input
+                type="text"
+                className="form-control"
+                name="tenderdetail"
+                value={formData.Mill_Rate}
+                onChange={handleChange}
+                autoComplete="off"
+              />
+            </div>
+
+            <div className="col-md-1">
+              <label htmlFor="companyName" className="form-label">
+                Tcs Amount:
+              </label>
+              <input
+                type="text"
+                className="form-control"
+                name="tenderdetail"
+                value={formData.Mill_Rate}
+                onChange={handleChange}
+                autoComplete="off"
+              />
+            </div>
+
+            <div className="col-md-1">
+              <label htmlFor="companyName" className="form-label">
+                <br></br>
+              </label>
+              <input
+                type="text"
+                className="form-control"
+                name="tenderdetail"
+                value={formData.Mill_Rate}
+                onChange={handleChange}
+                autoComplete="off"
+              />
+            </div>
+            <br></br>
+            <br></br>
+
+            <div className="col-md-1">
+              {" "}
+              <br></br>
+              <br></br>
+              <label>Loading By Us:</label>
+              <input
+                type="checkbox"
+                name="tdsCutByUs"
+                checked={formData.tdsCutByUs}
+                onChange={handleChange}
+              />
+            </div>
+          </div>
+
+          <div className="button" style={{ marginTop: "40px" }}>
+        
             <button
               type="submit"
               className="btn btn-primary"
@@ -295,57 +475,56 @@ const handleSubmit = (e) => {
               Save
             </button>
 
-
             {/* tableview */}
 
-
             <div className="col-md-12">
-        <table className="table">
-          <thead>
-            <tr>
-              <th>Change No</th>
-              <th>Tender Detail</th>
-              <th>Invoice No</th>
-              <th>Acknowledgment No</th>
-              <th>Company Address</th>
-              <th>Delivery Type</th>
-              <th>Date</th>
-              <th>Loading By Us</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {displayedData.map((item, index) => (
-              <tr key={index}>
-                <td>{item.changeNo}</td>
-                <td>{item.tenderdetail}</td>
-                <td>{item.invoiceNo}</td>
-                <td>{item.ackNo}</td>
-                <td>{item.companyAddress}</td>
-                <td>{item.state}</td>
-                <td>{formatDate(item.selectedDate)}</td>
-                <td>{item.tdsCutByUs ? "Yes" : "No"}</td>
-                <td>
-                  <button
-                    className="btn btn-warning"
-                    onClick={() => handleEdit(index)}
-                  >
-                
-                    Edit
-                  </button>
-                  <button
-                    className="btn btn-danger"
-                    onClick={() => handleDelete(index)}
-                  >
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-
+              <table className="table">
+                <thead>
+                  <tr>
+                    <th>Change No</th>
+                    <th>Tender Detail</th>
+                    <th>Invoice No</th>
+                    <th>Acknowledgment No</th>
+                    <th>Company Address</th>
+                    <th>Delivery Type</th>
+                    <th>Date</th>
+                    <th>Loading By Us</th>
+                    <th>Billing To</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {displayedData.map((item, index) => (
+                    <tr key={index}>
+                      <td>{item.changeNo}</td>
+                      <td>{item.tenderdetail}</td>
+                      <td>{item.invoiceNo}</td>
+                      <td>{item.ackNo}</td>
+                      <td>{item.companyAddress}</td>
+                      <td>{item.state}</td>
+                      <td>{formatDate(item.selectedDate)}</td>
+                      <td>{item.tdsCutByUs ? "Yes" : "No"}</td>
+                      <td>{item.title}</td>
+                      <td>
+                        <button
+                          className="btn btn-warning"
+                          onClick={() => handleEdit(index)}
+                        >
+                          Edit
+                        </button>
+                        <button
+                          style={{ marginLeft: "5px" }}
+                          className="btn btn-danger"
+                          onClick={() => handleDelete(item)}
+                        >
+                          Delete
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         </form>
       </div>
@@ -354,4 +533,3 @@ const handleSubmit = (e) => {
 };
 
 export default TenderPurchaseDetail;
-
