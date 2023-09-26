@@ -3,7 +3,6 @@ import CustomDatePicker from "../../../common/DateRangePicker";
 import axios from "axios";
 import DataTableModal from "../../../common/DataTableModal";
 import "../../../../App.css";
-import { useNavigate } from "react-router-dom";
 
 const TenderPurchaseDetail = () => {
   const [formData, setFormData] = useState({
@@ -23,8 +22,6 @@ const TenderPurchaseDetail = () => {
   const [selectedTitle, setSelectedTitle] = useState("");
 
   const [displayedData, setDisplayedData] = useState([]);
-
-  // const navigate = useNavigate();
 
   const handleDateChange = (date) => {
     setFormData((prevData) => ({
@@ -118,8 +115,8 @@ const TenderPurchaseDetail = () => {
     const handleKeyDown = (event) => {
       if (event.key === "F1") {
         event.preventDefault();
-        fetchData();
-        setShowModal(true);
+        // fetchData();
+        // setShowModal(true);
       }
     };
     document.addEventListener("keydown", handleKeyDown);
@@ -132,13 +129,16 @@ const TenderPurchaseDetail = () => {
   return (
     <div>
       <div className="">
-        
         <h4 style={{ alignItems: "center" }}>Tender Purchase Detail</h4>
-      
+
         <button type="button" className="btn btn-primary">
           Add
         </button>
-        <button type="button" className="btn btn-danger" style={{"marginLeft":"10px"}}>
+        <button
+          type="button"
+          className="btn btn-danger"
+          style={{ marginLeft: "10px" }}
+        >
           Cancel
         </button>
         <form className="row g-12" onSubmit={handleSubmit}>
@@ -466,7 +466,6 @@ const TenderPurchaseDetail = () => {
           </div>
 
           <div className="button" style={{ marginTop: "40px" }}>
-        
             <button
               type="submit"
               className="btn btn-primary"

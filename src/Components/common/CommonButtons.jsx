@@ -1,46 +1,38 @@
 import React from 'react';
 
 function FormButtons({
-  isAdding,
-  isEditing,
-  isEditSaveMode,
   handleAddOne,
-  handleSaveOrUpdate,
+  handleSave,
   handleEdit,
   handleCancel,
   handleBack,
   handleDelete,
-  handleFirst,
-  handlePrevious,
-  handleNext,
-  handleLast,
   
 }) {
-//   const disableNavButtons = recordData.length < 2;
 
   return (
     <div>
-      <button onClick={handleAddOne} disabled={isAdding || isEditing}>
+      <button onClick={handleAddOne} >
         Add One
       </button>
-      <button onClick={handleSaveOrUpdate} disabled={!isAdding && !isEditing}>
-        {!isEditing || !isEditSaveMode ? 'Save' : 'Update'}
+      <button onClick={handleSave}>
+       save
       </button>
-      <button onClick={handleEdit} disabled={isAdding || isEditing}>
+      <button onClick={handleEdit}>
         Edit
       </button>
-      <button onClick={handleCancel} disabled={!isAdding && !isEditing}>
+      <button onClick={handleCancel}>
         Cancel
       </button>
-      <button onClick={handleBack} disabled={isAdding || isEditing}>
+      <button onClick={handleBack} >
         Back
       </button>
-      <button onClick={handleDelete} disabled={isAdding || isEditing}>
+      <button onClick={handleDelete}>
         Delete
       </button>
 
       <div style={{"float":"right"}}>
-
+{/* 
       <button
         onClick={handleFirst}
         disabled={""}
@@ -64,7 +56,7 @@ function FormButtons({
         disabled={""}
       >
         &gt;&gt; Last
-      </button>
+      </button> */}
       </div>
     </div>
   );
