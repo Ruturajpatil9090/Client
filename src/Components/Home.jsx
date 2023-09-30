@@ -8,8 +8,8 @@ function Home() {
   }
   return (
     <>
-    <div style={{"margin-left":"50px","margin-top":"20px"}}>
-    <button onClick={handleClick} type="button" class="btn btn-primary">Delivery Order</button>
+    <div style={{marginLeft:"50px",marginTop:"20px"}}>
+    <button onClick={handleClick} type="button" className="btn btn-primary">Delivery Order</button>
     </div>
     </>
   );

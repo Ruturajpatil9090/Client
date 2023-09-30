@@ -86,7 +86,7 @@ function GroupMasterDetail() {
       <br />
       <br />
 
-      <SearchBar value={""} onChange={""} />
+      {/* <SearchBar value={""} onChange={""} /> */}
       <PerPageSelect value={perPage} onChange={handlePerPageChange} />
       <TableContainer>
         <h1>Posts Table</h1>

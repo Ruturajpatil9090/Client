@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import FormButtons from "../../../common/CommonButtons";
 import "../../../../App.css";
 import { useNavigate } from "react-router-dom";
@@ -10,7 +10,7 @@ import "react-datepicker/dist/react-datepicker.css";
 const TenderPurchaseHead = () => {
   const navigate = useNavigate();
 
-  // Define state to hold form data
+ 
   const [formData, setFormData] = useState({
     Tender_No: "",
     Company_Code: 1,
@@ -20,32 +20,29 @@ const TenderPurchaseHead = () => {
     Year_Code: 3,
     AutoPurchaseBill: "Y",
     bpAccount: "",
-    // brokerCode: ""
+    brokerCode: "",
   });
 
   useEffect(() => {
     getLatestTenderNo();
-    
-  }, []); 
+  }, []);
 
-  const getLatestTenderNo=()=>{
+  const getLatestTenderNo = () => {
     axios
       .get("http://localhost:5000/groupmaster/getalltender")
       .then((response) => {
         const lastTenderNo = response.data.latestTenderNo;
-        console.log(lastTenderNo)
-       
+        console.log(lastTenderNo);
+
         setFormData((prevFormData) => ({
           ...prevFormData,
-          Tender_No: lastTenderNo ? lastTenderNo + 1 : 1
+          Tender_No: lastTenderNo ? lastTenderNo + 1 : 1,
         }));
       })
       .catch((error) => {
         console.error("Error fetching last Tender_No:", error);
       });
-
-  }
- 
+  };
 
   const [millCode, setMillCode] = useState("");
   const [bpAccount, setBpAccount] = useState("");
@@ -54,49 +51,49 @@ const TenderPurchaseHead = () => {
   const [selectedDate, setSelectedDate] = useState(null);
   const [paymentDate, setPaymentDate] = useState(null);
 
-
   const handleDateChange = (date) => {
     date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
     setSelectedDate(date);
-  
   };
 
   const handlePaymentDateChange = (date) => {
     date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
     setPaymentDate(date);
-  
   };
 
   const handleMillCodeClick = (code) => {
     setMillCode(code);
+    console.log("Mill code clicked:", code);
   };
 
   const handleItemCodeClick = (code) => {
     setBpAccount(code);
+    console.log("Bp_Account:", code);
   };
 
-  const handleBrokerCodeClick = (code) => {
-    setBrokerCode(code);
+  const handleBrokerCodeClick = (data) => {
+    setBrokerCode(data);
+    console.log("Broker:", data);
   };
 
   const handleAdd = () => {};
 
   const handleSave = () => {
-    // Fetch the latest Tender_No from the database
     axios
       .get("http://localhost:5000/groupmaster/getalltender")
       .then((response) => {
         const lastTenderNo = response.data.latestTenderNo;
         console.log(lastTenderNo);
         const nextTenderNo = lastTenderNo ? lastTenderNo + 1 : 1;
-  
+
         const updatedFormData = {
           ...formData,
           millCode,
           bpAccount,
-          Tender_No: nextTenderNo  
+          brokerCode,
+          Tender_No: nextTenderNo,
         };
-  
+
         const payload = {
           headData: {
             ...updatedFormData,
@@ -107,11 +104,12 @@ const TenderPurchaseHead = () => {
               ? paymentDate.toISOString().split("T")[0]
               : null,
             Mill_Code: millCode,
-            Bp_Account: bpAccount
+            Bp_Account: bpAccount,
+            Broker: brokerCode,
           },
           detailData: []
         };
-  
+
         axios
           .post("http://localhost:5000/groupmaster/inserttender", payload)
           .then((response) => {
@@ -125,7 +123,6 @@ const TenderPurchaseHead = () => {
         console.error("Error fetching last Tender_No:", error);
       });
   };
-  
 
   const handleEdit = () => {};
   const handleBack = () => {
@@ -180,7 +177,7 @@ const TenderPurchaseHead = () => {
               className="col-md-2 d-flex align-items-center"
               style={{ marginLeft: "-50px" }}
             >
-              <label htmlFor="state" class="form-label">
+              <label htmlFor="state" className="form-label">
                 Resale/Mill:
               </label>
               <select
@@ -199,7 +196,7 @@ const TenderPurchaseHead = () => {
             </div>
 
             <div className="col-md-3 d-flex align-items-center">
-              <label htmlFor="state" class="form-label">
+              <label htmlFor="state" className="form-label">
                 Temp Tender:
               </label>
               <select
@@ -216,7 +213,7 @@ const TenderPurchaseHead = () => {
             </div>
 
             <div className="col-md-3 d-flex align-items-center">
-              <label htmlFor="state" class="form-label">
+              <label htmlFor="state" className="form-label">
                 Auto Purchase Bill:
               </label>
               <select
@@ -239,38 +236,34 @@ const TenderPurchaseHead = () => {
               <DatePicker
                 selected={selectedDate}
                 onChange={handleDateChange}
-                dateFormat="yyyy-MM-dd"
+                dateFormat="dd-MM-yyyy"
                 className="form-control"
                 autoComplete="off"
                 style={{ width: "150px", height: "35px" }}
               />
             </div>
 
-            
             <div className="col-md-3 d-flex align-items-center">
               <label htmlFor="state" className="form-label">
-               Payment Date:
+                Payment Date:
               </label>
               <DatePicker
                 selected={paymentDate}
                 onChange={handlePaymentDateChange}
-                dateFormat="yyyy-MM-dd"
+                dateFormat="dd-MM-yyyy"
                 className="form-control"
                 autoComplete="off"
                 style={{ width: "150px", height: "35px" }}
               />
             </div>
-
-            
           </div>
 
           <div className="row">
             <ApiDataTableModal
-              apiType="mill_code"
               onAcCodeClick={handleMillCodeClick}
+              onBrokerButtonClick={handleItemCodeClick}
+              onIdClick={handleBrokerCodeClick}
             />
-            <ApiDataTableModal apiType="Bp_Account"   onAcCodeClick={handleItemCodeClick} />
-            {/* <ApiDataTableModal apiType="broker"  onAcCodeClick={handleBrokerCodeClick} /> */}
           </div>
         </form>
       </div>
@@ -279,3 +272,4 @@ const TenderPurchaseHead = () => {
 };
 
 export default TenderPurchaseHead;
+

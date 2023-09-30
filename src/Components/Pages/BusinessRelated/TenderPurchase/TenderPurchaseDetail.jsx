@@ -372,7 +372,7 @@ const TenderPurchaseDetail = () => {
             </div>
 
             <div class="col-md-1">
-              <label htmlFor="autoPurchaseBill" class="form-label">
+              <label htmlFor="autoPurchaseBill" className="form-label">
                 Date :
               </label>
 
@@ -383,7 +383,7 @@ const TenderPurchaseDetail = () => {
             </div>
             <div class="col-md-1">
               {/* select date */}
-              <label htmlFor="autoPurchaseBill" class="form-label">
+              <label htmlFor="autoPurchaseBill" className="form-label">
                 Payment Date:
               </label>
 

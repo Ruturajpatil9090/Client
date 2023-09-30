@@ -192,7 +192,7 @@ const OrderDetail = () => {
             </div>
           </div>
 
-          <div className="button" style={{ "margin-top": "40px" }}>
+          <div className="button" style={{ marginTop: "40px" }}>
             <button type="submit" className="btn btn-primary">
               Save
             </button>

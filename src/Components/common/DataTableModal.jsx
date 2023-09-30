@@ -10,7 +10,7 @@ function DataTableModal({ showModal, onClose, data, onRecordClick }) {
 
   useEffect(() => {
     setFilteredData(data);
-    setCurrentPage(1); // Reset current page when data changes
+    setCurrentPage(1); 
   }, [data]);
 
   const handleSearch = (searchTerm) => {
@@ -21,7 +21,7 @@ function DataTableModal({ showModal, onClose, data, onRecordClick }) {
         item.body.toLowerCase().includes(searchTerm.toLowerCase())
     );
     setFilteredData(filteredItems);
-    setCurrentPage(1); // Reset current page when search term changes
+    setCurrentPage(1); 
   };
 
   const handlePageChange = (newPage) => {
