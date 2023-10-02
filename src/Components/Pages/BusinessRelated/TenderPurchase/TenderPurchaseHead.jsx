@@ -6,11 +6,12 @@ import ApiDataTableModal from "../../../commonFunctions/ApiDataTableModal";
 import axios from "axios";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import TenderPurchaseDetail from "./TenderPurchaseDetail";
 
 const TenderPurchaseHead = () => {
   const navigate = useNavigate();
 
- 
+ const [data,setData] = useState([])
   const [formData, setFormData] = useState({
     Tender_No: "",
     Company_Code: 1,
@@ -26,6 +27,19 @@ const TenderPurchaseHead = () => {
   useEffect(() => {
     getLatestTenderNo();
   }, []);
+
+  const fetchAndOpenPopup = async (acType) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:5000/groupmaster/gethelper?Ac_type=M`
+      );
+      const data = response.data;
+      setData(data)
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
 
   const getLatestTenderNo = () => {
     axios
@@ -138,6 +152,13 @@ const TenderPurchaseHead = () => {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+  };
+
+
+  const handleDetailDataAction = (action, tenderNo) => {
+    // Implement logic to handle the detailData based on the rowaction
+    console.log('Handling detailData action:', action, 'for Tender_NO:', tenderNo);
+    // You can make API calls or perform other operations based on the action and tenderNo
   };
 
   return (
@@ -265,8 +286,10 @@ const TenderPurchaseHead = () => {
               onIdClick={handleBrokerCodeClick}
             />
           </div>
+     
         </form>
       </div>
+      <TenderPurchaseDetail/>
     </div>
   );
 };

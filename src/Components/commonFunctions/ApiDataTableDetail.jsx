@@ -27,37 +27,37 @@ const ApiDataTableModal = ({
   const [selectedRowIndex, setSelectedRowIndex] = useState(-1);
  
 
-  const fetchAndOpenPopupData = async () => {
-    try {
-      const response = await axios.get(
-        "http://localhost:5000/groupmaster/gethelperall"
-      );
-      const data = response.data;
-      setPopupContent(data);
-      setShowModal(true);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
+//   const fetchAndOpenPopupData = async () => {
+//     try {
+//       const response = await axios.get(
+//         "http://localhost:5000/groupmaster/gethelperall"
+//       );
+//       const data = response.data;
+//       setPopupContent(data);
+//       setShowModal(true);
+//     } catch (error) {
+//       console.error("Error fetching data:", error);
+//     }
+//   };
 
-  const handleBpAccountButtonClick = () => {
-    lActiveInputFeild = "BpAccountInput";
-    fetchAndOpenPopupData();
-    if (onIdClick) {
-      onIdClick(enteredBpCode);
-    }
-  };
+//   const handleBpAccountButtonClick = () => {
+//     lActiveInputFeild = "BpAccountInput";
+//     fetchAndOpenPopupData();
+//     if (onIdClick) {
+//       onIdClick(enteredBpCode);
+//     }
+//   };
 
-  const handleBpAccountChange = (event) => {
-    const { value } = event.target;
+//   const handleBpAccountChange = (event) => {
+//     const { value } = event.target;
 
-    setEnteredenteredBpCode(value);
+//     setEnteredenteredBpCode(value);
 
-    const matchingItems = popupContent.find(
-      (item) => item.Ac_Code === parseInt(value, 10)
-    );
-    setEnteredenteredBpName(matchingItems ? matchingItems.Ac_Name_E : "");
-  };
+//     const matchingItems = popupContent.find(
+//       (item) => item.Ac_Code === parseInt(value, 10)
+//     );
+//     setEnteredenteredBpName(matchingItems ? matchingItems.Ac_Name_E : "");
+//   };
 
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
@@ -134,13 +134,13 @@ const ApiDataTableModal = ({
       if (onBrokerButtonClick) {
         onBrokerButtonClick(item.Ac_Code);
       }
-    } else if (lActiveInputFeild === "BpAccountInput") {
-      setEnteredenteredBpCode(item.Ac_Code);
-      console.log(item.Ac_Code);
-      setEnteredenteredBpName(item.Ac_Name_E);
-      if (onIdClick) {
-        onIdClick(item.Ac_Code);
-      }
+    // } else if (lActiveInputFeild === "BpAccountInput") {
+    //   setEnteredenteredBpCode(item.Ac_Code);
+    //   console.log(item.Ac_Code);
+    //   setEnteredenteredBpName(item.Ac_Name_E);
+    //   if (onIdClick) {
+    //     onIdClick(item.Ac_Code);
+    //   }
     }
 
     console.log("Closing modal");
@@ -156,31 +156,31 @@ const ApiDataTableModal = ({
   const itemsToDisplay = filteredData.slice(startIndex, endIndex);
 
   useEffect(() => {
+    let hasPopupBeenShown = false;
+  
     const handleKeyPress = (event) => {
-      if (event.key === "F1") {
+      if (event.key === "F1" && !hasPopupBeenShown) {
         if (event.target.id === "millCodeInput") {
           lActiveInputFeild = "millCodeInput";
           fetchAndOpenPopup("M");
+          hasPopupBeenShown = true;
           event.preventDefault();
         } else if (event.target.id === "brokerCodeInput") {
           lActiveInputFeild = "brokerCodeInput";
           fetchAndOpenPopup("B");
-          event.preventDefault();
-        } else if (event.target.id === "BpAccountInput") {
-          lActiveInputFeild = "BpAccountInput";
-          fetchAndOpenPopupData();
+          hasPopupBeenShown = true;
           event.preventDefault();
         }
       }
     };
-
+  
     window.addEventListener("keydown", handleKeyPress);
-   
+  
     return () => {
       window.removeEventListener("keydown", handleKeyPress);
-    
     };
   }, []);
+  
 
   useEffect(() => {
     const handleKeyDown = (event) => {
@@ -223,13 +223,10 @@ const ApiDataTableModal = ({
   
   return (
     <div>
-      <label htmlFor="millCodeInput" className="col-2 form-label" id="">
-        active Input feild:
-      </label>
-
+    
       <div className="mb-2 d-flex align-items-center">
         <label htmlFor="millCodeInput" className="col-2 form-label">
-          Mill Code:
+         Bill To:
         </label>
         <div className="d-flex">
           <input
@@ -246,7 +243,7 @@ const ApiDataTableModal = ({
             onClick={handleMillCodeButtonClick}
             className="ms-1"
           >
-            ...
+           ...
           </Button>
           <label id="acNameLabel" className="ms-2">
             {enteredAcName}
@@ -256,7 +253,7 @@ const ApiDataTableModal = ({
 
       <div className="mb-2 d-flex align-items-center">
         <label htmlFor="brokerCodeInput" className="col-2 form-label">
-          Broker Code:
+          Broker:
         </label>
         <div className="d-flex">
           <input
@@ -383,9 +380,9 @@ const ApiDataTableModal = ({
         </Modal.Footer>
       </Modal>
 
-      <div className="mb-2 d-flex align-items-center">
+      {/* <div className="mb-2 d-flex align-items-center">
         <label htmlFor="brokerCodeInput" className="col-2 form-label">
-          Bp Account:
+         Ship To:
         </label>
         <div className="d-flex">
           <input
@@ -402,7 +399,7 @@ const ApiDataTableModal = ({
             onClick={handleBpAccountButtonClick}
             className="ms-1"
           >
-           ...
+            Bp Account ...
           </Button>
           <label id="acNameLabel" className="ms-2">
             {enteredBpName}
@@ -460,7 +457,7 @@ const ApiDataTableModal = ({
             Close
           </Button>
         </Modal.Footer>
-      </Modal>
+      </Modal> */}
     </div>
   );
 };

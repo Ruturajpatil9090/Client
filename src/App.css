@@ -169,3 +169,14 @@ table.dataTable thead .sorting_desc_disabled:after,
 table.dataTable thead .sorting_desc_disabled:before {
   bottom: .5em;
 }
+
+
+#data-grid-demo {
+  min-height: 700px;
+}
+
+
+.deletedRecord {
+  background-color: red;
+}
+
