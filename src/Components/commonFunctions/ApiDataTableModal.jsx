@@ -222,21 +222,17 @@ const ApiDataTableModal = ({
   
   
   return (
-    <div>
-      <label htmlFor="millCodeInput" className="col-2 form-label" id="">
-        active Input feild:
-      </label>
-
-      <div className="mb-2 d-flex align-items-center">
-        <label htmlFor="millCodeInput" className="col-2 form-label">
+    <div className="d-flex flex-row ">
+      <div className="d-flex mt-2 align-items-center">
+        <label htmlFor="millCodeInput" className=" form-label">
           Mill Code:
         </label>
         <div className="d-flex">
           <input
             type="text"
-            className="form-control"
+            className="form-control ms-3"
             id="millCodeInput"
-            placeholder="Enter Mill Code"
+           
             value={enteredAcCode}
             onChange={handleAcCodeChange}
             style={{ width: "150px" }}
@@ -254,16 +250,16 @@ const ApiDataTableModal = ({
         </div>
       </div>
 
-      <div className="mb-2 d-flex align-items-center">
-        <label htmlFor="brokerCodeInput" className="col-2 form-label">
+      <div className="d-flex mt-2 align-items-center">
+        <label htmlFor="brokerCodeInput" className="form-label">
           Broker Code:
         </label>
         <div className="d-flex">
           <input
             type="text"
-            className="form-control"
+            className="form-control ms-3"
             id="brokerCodeInput"
-            placeholder="Enter Broker Code"
+          
             value={enteredBrokerCode}
             onChange={handleBrokerCodeChange}
             style={{ width: "150px" }}
@@ -383,16 +379,15 @@ const ApiDataTableModal = ({
         </Modal.Footer>
       </Modal>
 
-      <div className="mb-2 d-flex align-items-center">
-        <label htmlFor="brokerCodeInput" className="col-2 form-label">
+      <div className="d-flex mt-2 align-items-center">
+        <label htmlFor="brokerCodeInput" className="form-label">
           Bp Account:
         </label>
         <div className="d-flex">
           <input
             type="text"
-            className="form-control"
+            className="form-control ms-3"
             id="BpAccountInput"
-            placeholder="Enter Broker Code"
             value={enteredBpCode}
             onChange={handleBpAccountChange}
             style={{ width: "150px" }}

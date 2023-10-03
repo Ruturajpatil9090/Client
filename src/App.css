@@ -176,7 +176,9 @@ table.dataTable thead .sorting_desc_disabled:before {
 }
 
 
-.deletedRecord {
+.marked-for-deletion {
   background-color: red;
+ 
 }
+
 

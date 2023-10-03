@@ -1,23 +1,25 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import CustomDatePicker from "../../../common/DateRangePicker";
 import "../../../../App.css";
 import ApiDataTableDetail from "../../../commonFunctions/ApiDataTableDetail";
 
-const TenderPurchaseDetail = () => {
+const RecordForm = () => {
+  const [records, setRecords] = useState([]);
   const [formData, setFormData] = useState({
+    state: "R",
     companyAddress: "",
-    state: "Choose...",
-    tdsCutByUs: false,
     selectedDate: null,
+    tdsCutByUs: false,
+    saleRate:""
   });
-  const [showModal, setShowModal] = useState(false);
+  const [editIndex, setEditIndex] = useState(null);
+  const [markedForDeletionIndex, setMarkedForDeletionIndex] = useState(null);
   const [millCode, setMillCode] = useState("");
 
-  const [displayedData, setDisplayedData] = useState([]);
-  const [isAddingRecord, setIsAddingRecord] = useState(false);
-
-  const handleAddButtonClick = () => {
-    setIsAddingRecord(true);
+  const handleInputChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    const newValue = type === "checkbox" ? checked : value;
+    setFormData({ ...formData, [name]: newValue });
   };
 
   const handleDateChange = (date) => {
@@ -27,58 +29,55 @@ const TenderPurchaseDetail = () => {
     }));
   };
 
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: type === "checkbox" ? checked : value,
-    }));
-  };
-
-  const handleSubmit = (e) => {
+  const handleFormSubmit = (e) => {
     e.preventDefault();
-  };
 
-  const submitFormData = () => {
-    const newData = {
+    const newRecord = {
       ...formData,
-      id: Date.now(),
-      billingTo: millCode,
+      billingTo: millCode, 
     };
 
-    setDisplayedData((prevData) => [...prevData, newData]);
-
+    if (editIndex !== null) {
+      const updatedRecords = [...records];
+      updatedRecords[editIndex] = newRecord;
+      setRecords(updatedRecords);
+      setEditIndex(null);
+    } else {
+      setRecords([...records, newRecord]);
+    }
     setFormData({
+      state: "R",
       companyAddress: "",
-      state: "Choose...",
-      tdsCutByUs: false,
       selectedDate: null,
+      tdsCutByUs: false,
+      saleRate:""
     });
   };
 
   const handleEdit = (index) => {
-    const updatedData = [...displayedData];
-    const editedRecord = updatedData[index];
-    setFormData({ ...editedRecord });
-
-    updatedData.splice(index, 1);
-    setDisplayedData(updatedData);
-    setShowModal(false);
+    const editedRecord = records[index];
+    if (editedRecord.isDeleted) {
+      alert("This record has been deleted and cannot be edited.");
+      return;
+    }
+    setFormData({
+      ...editedRecord,
+      billingTo: editedRecord.billingTo,
+    });
+    setEditIndex(index);
   };
 
-  const handleDelete = (recordToDelete, index) => {
-    const updatedData = displayedData.map((record, idx) =>
-      idx === index ? { ...record, isDeleted: !record.isDeleted } : record
-    );
+  const handleDelete = (index) => {
+    if (index === editIndex) {
+      alert("Cannot delete a record being edited.");
+      return;
+    }
 
-    setDisplayedData(updatedData);
+    const updatedRecords = [...records];
+    updatedRecords[index].isDeleted = !updatedRecords[index].isDeleted;
+    setRecords(updatedRecords);
+    setMarkedForDeletionIndex(null);
   };
-
-  // const handleDelete = (recordToDelete) => {
-  //   setDisplayedData((prevData) =>
-  //     prevData.filter((record) => record !== recordToDelete)
-  //   );
-  // };
 
   const formatDate = (date) => {
     if (!date) return "";
@@ -88,50 +87,42 @@ const TenderPurchaseDetail = () => {
 
   const handleMillCodeClick = (code) => {
     setMillCode(code);
-    console.log("Mill code........", code);
-    console.log(code);
   };
 
-  const handleCancel = () => {
+  const handleClose = () => {
     setFormData({
+      ...formData,
+      state: "R",
       companyAddress: "",
-      state: "Choose...",
-      tdsCutByUs: false,
       selectedDate: null,
-      
+      tdsCutByUs: false,
+      saleRate:""
     });
-    setIsAddingRecord(false); // Disable adding record when cancel is clicked
+    if (editIndex !== null) {
+      setEditIndex(null);
+    }
   };
 
   return (
     <div>
-      <div className="">
-        <h4 style={{ alignItems: "center" }}>Tender Purchase Detail</h4>
-
-        <button
-          type="button"
-          className="btn btn-primary"
-          onClick={handleAddButtonClick}
-        >
-          Add
-        </button>
-        <button
-          type="button"
-          className="btn btn-danger"
-          style={{ marginLeft: "10px" }}
-          onClick={handleCancel} 
-        >
-          Close
-        </button>
-        <form className="row g-12" onSubmit={handleSubmit} method="POST">
-          <div class="row">
-            <ApiDataTableDetail onAcCodeClick={handleMillCodeClick}  />
-
-            <div class="col-md-1">
-              <label htmlFor="state" class="form-label">
-                Resale/Mill:
+      <h1>Record Form</h1>
+      <form onSubmit={handleFormSubmit} className="row g-3">
+        <div className="row g-3">
+          <div className="col-md-6 d-flex align-items-center">
+            <ApiDataTableDetail onAcCodeClick={handleMillCodeClick} />
+            <div className="col-n1">
+              <label htmlFor="state" className="form-label ms-4">
+                Delivery Type:
               </label>
-              <select name="state" class="form-select" autoComplete="off">
+            </div>
+            <div className="">
+              <select
+                name="state"
+                className="form-select"
+                value={formData.state}
+                onChange={handleInputChange}
+                autoComplete="off"
+              >
                 <option value="R">Resale</option>
                 <option value="M">Mill</option>
                 <option value="W">With Payment</option>
@@ -140,108 +131,122 @@ const TenderPurchaseDetail = () => {
             </div>
           </div>
 
-          <div className="row">
-            <div className="col-2">
-              <label htmlFor="companyAddress" className="form-label">
-                Narration:
-              </label>
-              <textarea
-                className="form-control"
-                placeholder="Company Address"
-                name="companyAddress"
-                value={formData.companyAddress}
-                onChange={handleChange}
-                autoComplete="off"
-                disabled={!isAddingRecord}
-              ></textarea>
-            </div>
-
-            <div class="col-md-1"></div>
-            <div class="col-md-1">
-              <label htmlFor="autoPurchaseBill" className="form-label">
-                Payment Date:
-              </label>
-
-              <CustomDatePicker
-                selectedDate={formData.selectedDate}
-                onChange={handleDateChange}
-                disabled={!isAddingRecord}
-              />
-            </div>
-
-            <div className="col-md-1">
-              {" "}
-              <br></br>
-              <br></br>
-              <label>Loading By Us:</label>
-              <input
-                type="checkbox"
-                name="tdsCutByUs"
-                checked={formData.tdsCutByUs}
-                onChange={handleChange}
-                disabled={!isAddingRecord}
-              />
-            </div>
+          <div className="col-md-2 d-flex align-items-center">
+            <label htmlFor="companyAddress" className="form-label ms-n5">
+              Narration:
+            </label>
+            <textarea
+              className="form-control"
+              placeholder="Company Address"
+              name="companyAddress"
+              value={formData.companyAddress}
+              onChange={handleInputChange}
+              autoComplete="off"
+              required
+            ></textarea>
           </div>
 
-          <div className="button" style={{ marginTop: "40px" }}>
-            <button
-              type="submit"
-              className="btn btn-primary"
-              onClick={submitFormData}
-              disabled={!isAddingRecord} 
-            >
-              Save
+          <div className="col-md-2 d-flex align-items-center">
+            <label htmlFor="autoPurchaseBill" className="form-label">
+              Payment Date:
+            </label>
+            <CustomDatePicker
+              selectedDate={formData.selectedDate}
+              onChange={handleDateChange}
+            />
+          </div>
+
+          <div className="col-md-2 d-flex align-items-center">
+            <label className="form-check-label">Loading By Us:</label>
+            <input
+              type="checkbox"
+              name="tdsCutByUs"
+              className="form-check-input ms-2"
+              checked={formData.tdsCutByUs}
+              onChange={handleInputChange}
+            />
+          </div>
+
+          <div className="col-md-1 d-flex align-items-center">
+  <label htmlFor="saleRate" className="form-label">
+    Sale Rate:
+  </label>
+  <input
+    type="text"
+    className="form-control"
+    name="saleRate"
+    value={formData.saleRate}
+    onChange={handleInputChange}
+    autoComplete="off"
+    pattern="[0-9]*"
+  
+  />
+</div>
+
+
+          <div className="col-md-1 d-flex align-items-center">
+            <button className="btn btn-primary" type="submit">
+              {editIndex !== null ? "Update" : "Add"}
             </button>
-
-            {/* tableview */}
-
-            <div className="col-md-12">
-              <table className="table">
-                <thead>
-                  <tr>
-                    <th>Company Address</th>
-                    <th>Delivery Type</th>
-                    <th>Date</th>
-                    <th>Loading By Us</th>
-                    <th>Billing To</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-
-                <tbody>
-                  {displayedData.map((item, index) => (
-                    <tr key={index}>
-                      <td>{item.companyAddress}</td>
-                      <td>{item.state}</td>
-                      <td>{formatDate(item.selectedDate)}</td>
-                      <td>{item.tdsCutByUs ? "Yes" : "No"}</td>
-                      <td>{item.billingTo}</td>
-                      <td>
-                        <button
-                          className="btn btn-warning"
-                          onClick={() => handleEdit(index)}
-                        >
-                          Edit
-                        </button>
-                        <button
-                          style={{ marginLeft: "5px" }}
-                          className="btn btn-danger"
-                          onClick={() => handleDelete(item, index)}
-                        >
-                          Delete
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
           </div>
-        </form>
-      </div>
+
+          <div className="col-md-1 d-flex align-items-center">
+            <button
+              className="btn btn-danger"
+              type="button"
+              onClick={handleClose}
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </form>
+      <br></br>
+
+      <table className=" table-bordered table">
+        <thead>
+          <tr>
+            <th >Action</th>
+            <th>Row Action</th>
+            <th>Company Address</th>
+            <th>Resale/Mill</th>
+            <th>Date</th>
+            <th>Loading By Us</th>
+            <th>Billing To</th>
+          </tr>
+        </thead>
+        <tbody>
+          {records.map((item, index) => (
+            <tr
+              key={index}
+              style={{ backgroundColor: item.isDeleted ? "red" : "white" }}
+            >
+              <td>
+                <button
+                  className="btn btn-warning"
+                  onClick={() => handleEdit(index)}
+                >
+                  Edit
+                </button>
+                <button
+                  className="btn btn-danger ms-2"
+                  onClick={() => handleDelete(index)}
+                >
+                  {item.isDeleted ? "Cancel" : "Delete"}
+                </button>
+              </td>
+              <td>A</td>
+              <td>{item.companyAddress}</td>
+              <td>{item.state}</td>
+              <td>{formatDate(item.selectedDate)}</td>
+              <td>{item.tdsCutByUs ? "Yes" : "No"}</td>
+              <td>{item.billingTo}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 };
 
-export default TenderPurchaseDetail;
+export default RecordForm;

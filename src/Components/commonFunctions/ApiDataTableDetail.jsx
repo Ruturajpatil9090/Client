@@ -5,8 +5,6 @@ import DataTablePagination from "../common/DataTablePagination";
 import axios from "axios";
 import "../../App.css";
 
-
-
 var lActiveInputFeild = "";
 const ApiDataTableModal = ({
   onAcCodeClick,
@@ -25,39 +23,38 @@ const ApiDataTableModal = ({
   const [enteredBpCode, setEnteredenteredBpCode] = useState("");
   const [enteredBpName, setEnteredenteredBpName] = useState("");
   const [selectedRowIndex, setSelectedRowIndex] = useState(-1);
- 
 
-//   const fetchAndOpenPopupData = async () => {
-//     try {
-//       const response = await axios.get(
-//         "http://localhost:5000/groupmaster/gethelperall"
-//       );
-//       const data = response.data;
-//       setPopupContent(data);
-//       setShowModal(true);
-//     } catch (error) {
-//       console.error("Error fetching data:", error);
-//     }
-//   };
+  //   const fetchAndOpenPopupData = async () => {
+  //     try {
+  //       const response = await axios.get(
+  //         "http://localhost:5000/groupmaster/gethelperall"
+  //       );
+  //       const data = response.data;
+  //       setPopupContent(data);
+  //       setShowModal(true);
+  //     } catch (error) {
+  //       console.error("Error fetching data:", error);
+  //     }
+  //   };
 
-//   const handleBpAccountButtonClick = () => {
-//     lActiveInputFeild = "BpAccountInput";
-//     fetchAndOpenPopupData();
-//     if (onIdClick) {
-//       onIdClick(enteredBpCode);
-//     }
-//   };
+  //   const handleBpAccountButtonClick = () => {
+  //     lActiveInputFeild = "BpAccountInput";
+  //     fetchAndOpenPopupData();
+  //     if (onIdClick) {
+  //       onIdClick(enteredBpCode);
+  //     }
+  //   };
 
-//   const handleBpAccountChange = (event) => {
-//     const { value } = event.target;
+  //   const handleBpAccountChange = (event) => {
+  //     const { value } = event.target;
 
-//     setEnteredenteredBpCode(value);
+  //     setEnteredenteredBpCode(value);
 
-//     const matchingItems = popupContent.find(
-//       (item) => item.Ac_Code === parseInt(value, 10)
-//     );
-//     setEnteredenteredBpName(matchingItems ? matchingItems.Ac_Name_E : "");
-//   };
+  //     const matchingItems = popupContent.find(
+  //       (item) => item.Ac_Code === parseInt(value, 10)
+  //     );
+  //     setEnteredenteredBpName(matchingItems ? matchingItems.Ac_Name_E : "");
+  //   };
 
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
@@ -134,13 +131,13 @@ const ApiDataTableModal = ({
       if (onBrokerButtonClick) {
         onBrokerButtonClick(item.Ac_Code);
       }
-    // } else if (lActiveInputFeild === "BpAccountInput") {
-    //   setEnteredenteredBpCode(item.Ac_Code);
-    //   console.log(item.Ac_Code);
-    //   setEnteredenteredBpName(item.Ac_Name_E);
-    //   if (onIdClick) {
-    //     onIdClick(item.Ac_Code);
-    //   }
+      // } else if (lActiveInputFeild === "BpAccountInput") {
+      //   setEnteredenteredBpCode(item.Ac_Code);
+      //   console.log(item.Ac_Code);
+      //   setEnteredenteredBpName(item.Ac_Name_E);
+      //   if (onIdClick) {
+      //     onIdClick(item.Ac_Code);
+      //   }
     }
 
     console.log("Closing modal");
@@ -157,7 +154,7 @@ const ApiDataTableModal = ({
 
   useEffect(() => {
     let hasPopupBeenShown = false;
-  
+
     const handleKeyPress = (event) => {
       if (event.key === "F1" && !hasPopupBeenShown) {
         if (event.target.id === "millCodeInput") {
@@ -173,14 +170,13 @@ const ApiDataTableModal = ({
         }
       }
     };
-  
+
     window.addEventListener("keydown", handleKeyPress);
-  
+
     return () => {
       window.removeEventListener("keydown", handleKeyPress);
     };
   }, []);
-  
 
   useEffect(() => {
     const handleKeyDown = (event) => {
@@ -196,7 +192,7 @@ const ApiDataTableModal = ({
         event.preventDefault();
         handleRecordDoubleClick(itemsToDisplay[selectedRowIndex]);
       }
-  
+
       // Ensure the selected row is in view when using arrow keys
       const modalBody = document.querySelector(".modal-body");
       const selectedRow = document.querySelector(".selected-row");
@@ -204,63 +200,61 @@ const ApiDataTableModal = ({
         const selectedRowOffset = selectedRow.offsetTop;
         const modalBodyOffset = modalBody.scrollTop;
         const modalBodyHeight = modalBody.clientHeight;
-        
+
         if (selectedRowOffset < modalBodyOffset) {
           modalBody.scrollTop = selectedRowOffset;
         } else if (selectedRowOffset > modalBodyOffset + modalBodyHeight) {
-          modalBody.scrollTop = selectedRowOffset - modalBodyHeight + selectedRow.clientHeight;
+          modalBody.scrollTop =
+            selectedRowOffset - modalBodyHeight + selectedRow.clientHeight;
         }
       }
     };
-  
+
     window.addEventListener("keydown", handleKeyDown);
-  
+
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [selectedRowIndex, itemsToDisplay]);
-  
-  
+
   return (
     <div>
-    
-      <div className="mb-2 d-flex align-items-center">
-        <label htmlFor="millCodeInput" className="col-2 form-label">
-         Bill To:
-        </label>
-        <div className="d-flex">
+      <div className="d-flex flex-row ">
+        <div className="d-flex mt-2 align-items-center">
+          <label htmlFor="millCodeInput" className="form-label">
+            Bill To:
+          </label>
           <input
             type="text"
-            className="form-control"
+            className="form-control ms-2"
             id="millCodeInput"
-            placeholder="Enter Mill Code"
             value={enteredAcCode}
             onChange={handleAcCodeChange}
             style={{ width: "150px" }}
+            required
+            aria-describedby="millCodeInputHelp"
+            
           />
+         
           <Button
             variant="primary"
             onClick={handleMillCodeButtonClick}
             className="ms-1"
           >
-           ...
+            ...
           </Button>
           <label id="acNameLabel" className="ms-2">
             {enteredAcName}
           </label>
         </div>
-      </div>
-
-      <div className="mb-2 d-flex align-items-center">
-        <label htmlFor="brokerCodeInput" className="col-2 form-label">
-          Broker:
-        </label>
-        <div className="d-flex">
+        <div className="d-flex mt-2 align-items-center">
+          <label htmlFor="brokerCodeInput" className="form-label">
+           Ship To:
+          </label>
           <input
             type="text"
-            className="form-control"
+            className="form-control ms-2"
             id="brokerCodeInput"
-            placeholder="Enter Broker Code"
             value={enteredBrokerCode}
             onChange={handleBrokerCodeChange}
             style={{ width: "150px" }}
@@ -270,7 +264,7 @@ const ApiDataTableModal = ({
             onClick={handleBrokerButtonClick}
             className="ms-1"
           >
-           ...
+            ...
           </Button>
           <label id="acNameLabel" className="ms-2">
             {enteredBrokerName}
@@ -379,85 +373,6 @@ const ApiDataTableModal = ({
           </Button>
         </Modal.Footer>
       </Modal>
-
-      {/* <div className="mb-2 d-flex align-items-center">
-        <label htmlFor="brokerCodeInput" className="col-2 form-label">
-         Ship To:
-        </label>
-        <div className="d-flex">
-          <input
-            type="text"
-            className="form-control"
-            id="BpAccountInput"
-            placeholder="Enter Broker Code"
-            value={enteredBpCode}
-            onChange={handleBpAccountChange}
-            style={{ width: "150px" }}
-          />
-          <Button
-            variant="primary"
-            onClick={handleBpAccountButtonClick}
-            className="ms-1"
-          >
-            Bp Account ...
-          </Button>
-          <label id="acNameLabel" className="ms-2">
-            {enteredBpName}
-          </label>
-        </div>
-      </div>
-
-      <Modal show={showModal} onHide={handleCloseModal}>
-        <Modal.Header closeButton>
-          <Modal.Title>Popup</Modal.Title>
-        </Modal.Header>
-        <DataTableSearch data={popupContent} onSearch={handleSearch} />
-        <Modal.Body>
-          {Array.isArray(popupContent) ? (
-            <div className="table-responsive">
-              <table className="table table-striped table-hover">
-                <thead>
-                  <tr>
-                    <th>Account Code</th>
-                    <th>Account Name</th>
-                    <th>Account Type</th>
-                    <th>City Name</th>
-                    <th>Address</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {itemsToDisplay.map((item, index) => (
-                    <tr
-                      key={index}
-                      onDoubleClick={() => handleRecordDoubleClick(item)}
-                      className={index === selectedRowIndex ? "selected-row" : ""}
-                    >
-                      <td>{item.Ac_Code}</td>
-                      <td>{item.Ac_Name_E}</td>
-                      <td>{item.Ac_type}</td>
-                      <td>{item.cityname}</td>
-                      <td>{item.Address_E}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          ) : (
-            "Loading..."
-          )}
-        </Modal.Body>
-
-        <Modal.Footer>
-          <DataTablePagination
-            totalItems={filteredData.length}
-            itemsPerPage={itemsPerPage}
-            onPageChange={handlePageChange}
-          />
-          <Button variant="secondary" onClick={handleCloseModal}>
-            Close
-          </Button>
-        </Modal.Footer>
-      </Modal> */}
     </div>
   );
 };

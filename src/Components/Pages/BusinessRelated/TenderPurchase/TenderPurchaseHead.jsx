@@ -177,107 +177,100 @@ const TenderPurchaseHead = () => {
         />
         <br></br>
         <form onSubmit={handleSubmit}>
-          <div className="row">
-            <div className="col-md-2 d-flex ">
-              <label htmlFor="code" className="form-label ">
-                Tender No:
-              </label>
-              <input
-                type="text"
-                className="form-control"
-                name="Tender_No"
-                value={formData.Tender_No}
-                onChange={handleInputChange}
-                autoComplete="off"
-                style={{ width: "100px", height: "30px" }}
-                readOnly
-              />
-            </div>
+        <div className="d-flex">
+  <div  className="col-md-1 d-flex align-items-center">
+    <label htmlFor="code" className="form-label ">
+      Tender No:
+    </label>
+    <input
+      type="text"
+      className="form-control "
+      name="Tender_No"
+      value={formData.Tender_No}
+      onChange={handleInputChange}
+      autoComplete="off"
+      readOnly
+    />
+  </div>
 
-            <div
-              className="col-md-2 d-flex align-items-center"
-              style={{ marginLeft: "-50px" }}
-            >
-              <label htmlFor="state" className="form-label">
-                Resale/Mill:
-              </label>
-              <select
-                name="type"
-                className="form-select"
-                value={formData.type}
-                onChange={handleInputChange}
-                autoComplete="off"
-                style={{ width: "150px", height: "35px" }}
-              >
-                <option value="R">Resale</option>
-                <option value="M">Mill</option>
-                <option value="W">With Payment</option>
-                <option value="P">Party Bill Rate</option>
-              </select>
-            </div>
+  <div className="col-md-2 d-flex align-items-center">
+    <label htmlFor="state" className="form-label ms-1">
+      Resale/Mill:
+    </label>
+    <select
+      name="type"
+      className="form-select"
+      value={formData.type}
+      onChange={handleInputChange}
+      autoComplete="off"
+    >
+      <option value="R">Resale</option>
+      <option value="M">Mill</option>
+      <option value="W">With Payment</option>
+      <option value="P">Party Bill Rate</option>
+    </select>
+  </div>
 
-            <div className="col-md-3 d-flex align-items-center">
-              <label htmlFor="state" className="form-label">
-                Temp Tender:
-              </label>
-              <select
-                name="Temptender"
-                className="form-select"
-                value={formData.Temptender}
-                onChange={handleInputChange}
-                autoComplete="off"
-                style={{ width: "100px", height: "35px" }}
-              >
-                <option value="Y">Yes</option>
-                <option value="N">No</option>
-              </select>
-            </div>
+  <div className="col-md-2 d-flex align-items-center">
+    <label htmlFor="state" className="form-label ms-2">
+      Temp Tender:
+    </label>
+    <select
+      name="Temptender"
+      className="form-select"
+      value={formData.Temptender}
+      onChange={handleInputChange}
+      autoComplete="off"
+    >
+      <option value="Y">Yes</option>
+      <option value="N">No</option>
+    </select>
+  </div>
 
-            <div className="col-md-3 d-flex align-items-center">
-              <label htmlFor="state" className="form-label">
-                Auto Purchase Bill:
-              </label>
-              <select
-                name="AutoPurchaseBill"
-                className="form-select"
-                value={formData.AutoPurchaseBill}
-                onChange={handleInputChange}
-                autoComplete="off"
-                style={{ width: "100px", height: "35px" }}
-              >
-                <option value="Y">Yes</option>
-                <option value="N">No</option>
-              </select>
-            </div>
+  <div className="col-md-2 d-flex align-items-center">
+    <label htmlFor="state" className="form-label ms-2">
+      Auto Purchase Bill:
+    </label>
+    <select
+      name="AutoPurchaseBill"
+      className="form-select"
+      value={formData.AutoPurchaseBill}
+      onChange={handleInputChange}
+      autoComplete="off"
+    >
+      <option value="Y">Yes</option>
+      <option value="N">No</option>
+    </select>
+  </div>
 
-            <div className="col-md-3 d-flex align-items-center">
-              <label htmlFor="state" className="form-label">
-                Date:
-              </label>
-              <DatePicker
-                selected={selectedDate}
-                onChange={handleDateChange}
-                dateFormat="dd-MM-yyyy"
-                className="form-control"
-                autoComplete="off"
-                style={{ width: "150px", height: "35px" }}
-              />
-            </div>
+  <div className="col-md-2 d-flex align-items-center">
+    <label htmlFor="state" className="form-label ms-2">
+      Date:
+    </label>
+    <DatePicker
+      selected={selectedDate}
+      onChange={handleDateChange}
+      dateFormat="dd-MM-yyyy"
+      className="form-control"
+      autoComplete="off"
+    />
+  </div>
 
-            <div className="col-md-3 d-flex align-items-center">
-              <label htmlFor="state" className="form-label">
-                Payment Date:
-              </label>
-              <DatePicker
-                selected={paymentDate}
-                onChange={handlePaymentDateChange}
-                dateFormat="dd-MM-yyyy"
-                className="form-control"
-                autoComplete="off"
-                style={{ width: "150px", height: "35px" }}
-              />
-            </div>
-          </div>
+  <div className="col-md-2 d-flex align-items-center">
+    <label htmlFor="state" className="form-label ms-2">
+      Payment Date:
+    </label>
+    <DatePicker
+      selected={paymentDate}
+      onChange={handlePaymentDateChange}
+      dateFormat="dd-MM-yyyy"
+      className="form-control"
+      autoComplete="off"
+    />
+  </div>
+</div>
+
+
 
           <div className="row">
             <ApiDataTableModal
