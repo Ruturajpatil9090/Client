@@ -1,67 +1,100 @@
-import React from 'react';
+// CommonButtons.js
+import React from "react";
 
-function FormButtons({
+const CommonButtons = ({
   handleAddOne,
-  handleSave,
+  handleSaveOrUpdate,
   handleEdit,
+  handleDelete,
   handleCancel,
   handleBack,
-  handleDelete,
-  
-}) {
-
+  addOneButtonEnabled,
+  saveButtonEnabled,
+  editButtonEnabled,
+  deleteButtonEnabled,
+  cancelButtonEnabled,
+  backButtonEnabled,
+  isEditMode,
+}) => {
   return (
-    <div>
-      <button onClick={handleAddOne} >
-        Add One
+    <div style={buttonContainerStyle}>
+      <button
+        onClick={handleAddOne}
+        disabled={!addOneButtonEnabled}
+        style={buttonStyle}
+      >
+        Add New
       </button>
-      <button onClick={handleSave}>
-       save
-      </button>
-      <button onClick={handleEdit}>
+      {isEditMode ? (
+        <button onClick={handleSaveOrUpdate} style={updateButtonStyle}>
+          Update
+        </button>
+      ) : (
+        <button
+          onClick={handleSaveOrUpdate}
+          disabled={!saveButtonEnabled}
+          style={buttonStyle}
+        >
+          Save
+        </button>
+      )}
+      <button
+        onClick={handleEdit}
+        disabled={!editButtonEnabled}
+        style={buttonStyle}
+      >
         Edit
       </button>
-      <button onClick={handleCancel}>
-        Cancel
-      </button>
-      <button onClick={handleBack} >
-        Back
-      </button>
-      <button onClick={handleDelete}>
+      <button
+        onClick={handleDelete}
+        disabled={!deleteButtonEnabled}
+        style={buttonStyle}
+      >
         Delete
       </button>
-
-      <div style={{"float":"right"}}>
-{/* 
       <button
-        onClick={handleFirst}
-        disabled={""}
+        onClick={handleCancel}
+        disabled={!cancelButtonEnabled}
+        style={buttonStyle}
       >
-        &lt;&lt; First
+        Cancel
       </button>
       <button
-        onClick={handlePrevious}
-        disabled={""}
+        onClick={handleBack}
+        disabled={!backButtonEnabled}
+        style={buttonStyle}
       >
-        &lt; Previous
+        Back
       </button>
-      <button
-        onClick={handleNext}
-        disabled={""}
-      >
-        Next &gt;
-      </button>
-      <button
-        onClick={handleLast}
-        disabled={""}
-      >
-        &gt;&gt; Last
-      </button> */}
-      </div>
     </div>
   );
-}
+};
 
-export default FormButtons;
+const buttonContainerStyle = {
+  marginTop: "10px",
+  marginBottom: "10px",
+  display: "flex",
+  gap: "10px",
+};
 
+const buttonStyle = {
+  backgroundColor: "blue",
+  color: "white",
+  border: "1px solid #ccc",
+  cursor: "pointer",
+  width: "50%",
+  height: "35px",
+  fontSize: "12px",
+};
 
+const updateButtonStyle = {
+  backgroundColor: "blue",
+  color: "white",
+  border: "1px solid #ccc",
+  cursor: "pointer",
+  width: "4%",
+  height: "35px",
+  fontSize: "12px",
+};
+
+export default CommonButtons;

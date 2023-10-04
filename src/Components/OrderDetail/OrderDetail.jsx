@@ -5,7 +5,6 @@ import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Button from "../common/Button";
 import DataTableModal from "../common/DataTableModal";
-import FormComponent from "../common/FormComponent";
 const OrderDetail = () => {
   const [data, setData] = useState([]);
   const [showModal, setShowModal] = useState(false);
@@ -183,12 +182,6 @@ const OrderDetail = () => {
                 onRecordClick={handleRecordClick}
               />
 
-              {selectedRecord && (
-                <FormComponent
-                  selectedId={selectedRecord.id}
-                  selectedTitle={selectedRecord.title}
-                />
-              )}
             </div>
           </div>
 

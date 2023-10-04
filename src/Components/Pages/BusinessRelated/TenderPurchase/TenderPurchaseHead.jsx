@@ -11,7 +11,29 @@ import TenderPurchaseDetail from "./TenderPurchaseDetail";
 const TenderPurchaseHead = () => {
   const navigate = useNavigate();
 
- const [data,setData] = useState([])
+  const [data, setData] = useState([]);
+  const [millCode, setMillCode] = useState("");
+  const [bpAccount, setBpAccount] = useState("");
+  const [brokerCode, setBrokerCode] = useState("");
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [paymentDate, setPaymentDate] = useState(null);
+
+  const [addOneButtonEnabled, setAddOneButtonEnabled] = useState(false);
+  const [saveButtonEnabled, setSaveButtonEnabled] = useState(true);
+  const [cancelButtonEnabled, setCancelButtonEnabled] = useState(true);
+  const [editButtonEnabled, setEditButtonEnabled] = useState(false);
+  const [deleteButtonEnabled, setDeleteButtonEnabled] = useState(false);
+  const [backButtonEnabled, setBackButtonEnabled] = useState(true);
+
+  const [isEditMode, setIsEditMode] = useState(false);
+
+  const [highlightedButton, setHighlightedButton] = useState(null);
+
+  const defaultSelectedDate = selectedDate || new Date();
+
+  const minDate = new Date(2023, 3, 1);
+  const maxDate = new Date(2024, 2, 31);
+
   const [formData, setFormData] = useState({
     Tender_No: "",
     Company_Code: 1,
@@ -27,19 +49,6 @@ const TenderPurchaseHead = () => {
   useEffect(() => {
     getLatestTenderNo();
   }, []);
-
-  const fetchAndOpenPopup = async (acType) => {
-    try {
-      const response = await axios.get(
-        `http://localhost:5000/groupmaster/gethelper?Ac_type=M`
-      );
-      const data = response.data;
-      setData(data)
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
-
 
   const getLatestTenderNo = () => {
     axios
@@ -57,13 +66,6 @@ const TenderPurchaseHead = () => {
         console.error("Error fetching last Tender_No:", error);
       });
   };
-
-  const [millCode, setMillCode] = useState("");
-  const [bpAccount, setBpAccount] = useState("");
-  const [brokerCode, setBrokerCode] = useState("");
-
-  const [selectedDate, setSelectedDate] = useState(null);
-  const [paymentDate, setPaymentDate] = useState(null);
 
   const handleDateChange = (date) => {
     date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
@@ -90,8 +92,14 @@ const TenderPurchaseHead = () => {
     console.log("Broker:", data);
   };
 
-  const handleAdd = () => {};
-
+  const handleAddOne = () => {
+    setAddOneButtonEnabled(false);
+    setSaveButtonEnabled(true);
+    setCancelButtonEnabled(true);
+    setEditButtonEnabled(false);
+    setDeleteButtonEnabled(false);
+    setIsEditMode(false);
+  };
   const handleSave = () => {
     axios
       .get("http://localhost:5000/groupmaster/getalltender")
@@ -121,7 +129,7 @@ const TenderPurchaseHead = () => {
             Bp_Account: bpAccount,
             Broker: brokerCode,
           },
-          detailData: []
+          detailData: [],
         };
 
         axios
@@ -138,15 +146,61 @@ const TenderPurchaseHead = () => {
       });
   };
 
-  const handleEdit = () => {};
+  const handleEdit = () => {
+    setIsEditMode(true);
+    setAddOneButtonEnabled(false);
+    setSaveButtonEnabled(true);
+    setCancelButtonEnabled(true);
+    setEditButtonEnabled(false);
+    setDeleteButtonEnabled(false);
+    setBackButtonEnabled(true);
+  };
+
+  const handleSaveOrUpdate = () => {
+    if (isEditMode) {
+      setIsEditMode(false);
+      setAddOneButtonEnabled(true);
+      setEditButtonEnabled(true);
+      setDeleteButtonEnabled(true);
+      setBackButtonEnabled(true);
+      setSaveButtonEnabled(false);
+      setCancelButtonEnabled(false);
+    } else {
+      setIsEditMode(false);
+      setAddOneButtonEnabled(true);
+      setEditButtonEnabled(true);
+      setDeleteButtonEnabled(true);
+      setBackButtonEnabled(true);
+      setSaveButtonEnabled(false);
+      setCancelButtonEnabled(false);
+    }
+  };
+
   const handleBack = () => {
     navigate("/business/tender_utility");
   };
-  const handleDelete = () => {};
-  const handleCancel = () => {};
+  const handleDelete = () => {
+    setIsEditMode(false);
+    setAddOneButtonEnabled(true);
+    setEditButtonEnabled(true);
+    setDeleteButtonEnabled(true);
+    setBackButtonEnabled(true);
+    setSaveButtonEnabled(false);
+    setCancelButtonEnabled(false);
+  };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleCancel = () => {
+    setIsEditMode(false);
+    setAddOneButtonEnabled(true);
+    setEditButtonEnabled(true);
+    setDeleteButtonEnabled(true);
+    setBackButtonEnabled(true);
+    setSaveButtonEnabled(false);
+    setCancelButtonEnabled(false);
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
   };
 
   const handleInputChange = (e) => {
@@ -154,124 +208,292 @@ const TenderPurchaseHead = () => {
     setFormData({ ...formData, [name]: value });
   };
 
+  const handleFirst = () => {};
 
-  const handleDetailDataAction = (action, tenderNo) => {
-    // Implement logic to handle the detailData based on the rowaction
-    console.log('Handling detailData action:', action, 'for Tender_NO:', tenderNo);
-    // You can make API calls or perform other operations based on the action and tenderNo
+  const handleLast = () => {};
+
+  const handlePrevious = () => {};
+
+  const handleNext = () => {};
+
+  const handleButtonClick = (button) => {
+    setHighlightedButton(button);
   };
 
   return (
     <div>
       <div>
         <center>
-          <h4>Tender Purchase</h4>
+          <h4>Tender Purchase Head</h4>
         </center>
-        <FormButtons
-          handleAddOne={handleAdd}
-          handleSave={handleSave}
-          handleEdit={handleEdit}
-          handleCancel={handleCancel}
-          handleBack={handleBack}
-          handleDelete={handleDelete}
-        />
-        <br></br>
+        <div
+          style={{
+            marginTop: "10px",
+            marginBottom: "10px",
+            display: "flex",
+            gap: "10px",
+            
+          }}
+        >
+          <button
+            onClick={handleAddOne}
+            disabled={!addOneButtonEnabled}
+            style={{
+              backgroundColor: addOneButtonEnabled ? "blue" : "white",
+              color: addOneButtonEnabled ? "white" : "black",
+              border: "1px solid #ccc",
+              cursor: "pointer",
+              width: "4%",
+              height: "35px",
+              fontSize: "12px",
+            }}
+          >
+            Add New
+          </button>
+          {isEditMode ? (
+            <button
+              onClick={handleSaveOrUpdate}
+              style={{
+                backgroundColor: "blue",
+                color: "white",
+                border: "1px solid #ccc",
+                cursor: "pointer",
+                width: "4%",
+                height: "35px",
+                fontSize: "12px",
+              }}
+            >
+              Update
+            </button>
+          ) : (
+            <button
+              onClick={handleSaveOrUpdate}
+              disabled={!saveButtonEnabled}
+              style={{
+                backgroundColor: saveButtonEnabled ? "blue" : "white",
+                color: saveButtonEnabled ? "white" : "black",
+                border: "1px solid #ccc",
+                cursor: saveButtonEnabled ? "pointer" : "not-allowed",
+                width: "4%",
+                height: "35px",
+                fontSize: "12px",
+              }}
+            >
+              Save
+            </button>
+          )}
+          <button
+            onClick={handleEdit}
+            disabled={!editButtonEnabled}
+            style={{
+              backgroundColor: editButtonEnabled ? "blue" : "white",
+              color: editButtonEnabled ? "white" : "black",
+              border: "1px solid #ccc",
+              cursor: editButtonEnabled ? "pointer" : "not-allowed",
+              width: "4%",
+              height: "35px",
+              fontSize: "12px",
+            }}
+          >
+            Edit
+          </button>
+          <button
+            onClick={handleDelete}
+            disabled={!deleteButtonEnabled}
+            style={{
+              backgroundColor: deleteButtonEnabled ? "blue" : "white",
+              color: deleteButtonEnabled ? "white" : "black",
+              border: "1px solid #ccc",
+              cursor: deleteButtonEnabled ? "pointer" : "not-allowed",
+              width: "4%",
+              height: "35px",
+              fontSize: "12px",
+            }}
+          >
+            Delete
+          </button>
+          <button
+            onClick={handleCancel}
+            disabled={!cancelButtonEnabled}
+            style={{
+              backgroundColor: cancelButtonEnabled ? "blue" : "white",
+              color: cancelButtonEnabled ? "white" : "black",
+              border: "1px solid #ccc",
+              cursor: cancelButtonEnabled ? "pointer" : "not-allowed",
+              width: "4%",
+              height: "35px",
+              fontSize: "12px",
+            }}
+          >
+            Cancel
+          </button>
+          <button
+            onClick={handleBack}
+            disabled={!backButtonEnabled}
+            style={{
+              backgroundColor: backButtonEnabled ? "blue" : "white",
+              color: backButtonEnabled ? "white" : "black",
+              border: "1px solid #ccc",
+              cursor: backButtonEnabled ? "pointer" : "not-allowed",
+              width: "4%",
+              height: "35px",
+              fontSize: "12px",
+            }}
+          >
+            Back
+          </button>
+        
+        </div>
+        <div style={{ float: 'right', marginTop: '-40px' }}>
+      <button
+        style={{
+          border: '1px solid #ccc',
+          backgroundColor: highlightedButton === 'first' ? 'black' : 'blue',
+          color: 'white',
+          width: "100px",
+              height: "35px",
+        }}
+        onClick={() => handleButtonClick('first')}
+      >
+        &lt;&lt; 
+      </button>
+      <button
+        style={{
+          border: '1px solid #ccc',
+          backgroundColor: highlightedButton === 'previous' ? 'black' : 'blue',
+          color: 'white',
+          width: "100px",
+          height: "35px",
+        }}
+        onClick={() => handleButtonClick('previous')}
+      >
+        &lt; 
+      </button>
+      <button
+        style={{
+          border: '1px solid #ccc',
+          backgroundColor: highlightedButton === 'next' ? 'black' : 'blue',
+          color: 'white',
+          width: "100px",
+          height: "35px",
+        }}
+        onClick={() => handleButtonClick('next')}
+      >
+        &gt;
+      </button>
+      <button
+        style={{
+          border: '1px solid #ccc',
+          backgroundColor: highlightedButton === 'last' ? 'black' : 'blue',
+          color: 'white',
+          width: "100px",
+          height: "35px",
+        }}
+        onClick={() => handleButtonClick('last')}
+      >
+        &gt;&gt;
+      </button>
+    </div>
+
         <form onSubmit={handleSubmit}>
-        <div className="d-flex">
-  <div  className="col-md-1 d-flex align-items-center">
-    <label htmlFor="code" className="form-label ">
-      Tender No:
-    </label>
-    <input
-      type="text"
-      className="form-control "
-      name="Tender_No"
-      value={formData.Tender_No}
-      onChange={handleInputChange}
-      autoComplete="off"
-      readOnly
-    />
-  </div>
+          <div className="d-flex">
+            <label htmlFor="code" className="form-label ">
+              Tender No:
+            </label>
+            <div className="col-md-1 d-flex ">
+              <input
+                type="text"
+                className="form-control "
+                name="Tender_No"
+                value={formData.Tender_No}
+                onChange={handleInputChange}
+                autoComplete="off"
+                readOnly
+                style={{ width: "50", height: "35px" }}
+              />
+            </div>
+            <label htmlFor="state" className="form-label ms-1">
+              Resale/Mill:
+            </label>
+            <div className="col-md-1 d-flex ">
+              <select
+                name="type"
+                className="form-select"
+                value={formData.type}
+                onChange={handleInputChange}
+                autoComplete="off"
+                style={{ width: "50", height: "35px" }}
+              >
+                <option value="R">Resale</option>
+                <option value="M">Mill</option>
+                <option value="W">With Payment</option>
+                <option value="P">Party Bill Rate</option>
+              </select>
+            </div>
 
-  <div className="col-md-2 d-flex align-items-center">
-    <label htmlFor="state" className="form-label ms-1">
-      Resale/Mill:
-    </label>
-    <select
-      name="type"
-      className="form-select"
-      value={formData.type}
-      onChange={handleInputChange}
-      autoComplete="off"
-    >
-      <option value="R">Resale</option>
-      <option value="M">Mill</option>
-      <option value="W">With Payment</option>
-      <option value="P">Party Bill Rate</option>
-    </select>
-  </div>
+            <label htmlFor="state" className="form-label ms-1">
+              Temp Tender:
+            </label>
+            <div className=" d-flex ">
+              <select
+                name="Temptender"
+                className="form-select"
+                value={formData.Temptender}
+                onChange={handleInputChange}
+                autoComplete="off"
+                style={{ width: "50", height: "35px" }}
+              >
+                <option value="Y">Yes</option>
+                <option value="N">No</option>
+              </select>
+            </div>
+            <label htmlFor="state" className="form-label ms-1 ">
+              Auto Purchase Bill:
+            </label>
+            <div className=" d-flex ">
+              <select
+                name="AutoPurchaseBill"
+                className="form-select"
+                value={formData.AutoPurchaseBill}
+                onChange={handleInputChange}
+                autoComplete="off"
+                style={{ width: "50", height: "35px" }}
+              >
+                <option value="Y">Yes</option>
+                <option value="N">No</option>
+              </select>
+            </div>
 
-  <div className="col-md-2 d-flex align-items-center">
-    <label htmlFor="state" className="form-label ms-2">
-      Temp Tender:
-    </label>
-    <select
-      name="Temptender"
-      className="form-select"
-      value={formData.Temptender}
-      onChange={handleInputChange}
-      autoComplete="off"
-    >
-      <option value="Y">Yes</option>
-      <option value="N">No</option>
-    </select>
-  </div>
+            <label htmlFor="state" className="form-label ms-2">
+              Date:
+            </label>
+            <div className="col-md-1 d-flex ">
+              <DatePicker
+                selected={defaultSelectedDate}
+                onChange={handleDateChange}
+                dateFormat="dd-MM-yyyy"
+                className="form-control"
+                autoComplete="off"
+                minDate={minDate}
+                maxDate={maxDate}
+                style={{ width: "50px", height: "35px" }}
+              />
+            </div>
 
-  <div className="col-md-2 d-flex align-items-center">
-    <label htmlFor="state" className="form-label ms-2">
-      Auto Purchase Bill:
-    </label>
-    <select
-      name="AutoPurchaseBill"
-      className="form-select"
-      value={formData.AutoPurchaseBill}
-      onChange={handleInputChange}
-      autoComplete="off"
-    >
-      <option value="Y">Yes</option>
-      <option value="N">No</option>
-    </select>
-  </div>
-
-  <div className="col-md-2 d-flex align-items-center">
-    <label htmlFor="state" className="form-label ms-2">
-      Date:
-    </label>
-    <DatePicker
-      selected={selectedDate}
-      onChange={handleDateChange}
-      dateFormat="dd-MM-yyyy"
-      className="form-control"
-      autoComplete="off"
-    />
-  </div>
-
-  <div className="col-md-2 d-flex align-items-center">
-    <label htmlFor="state" className="form-label ms-2">
-      Payment Date:
-    </label>
-    <DatePicker
-      selected={paymentDate}
-      onChange={handlePaymentDateChange}
-      dateFormat="dd-MM-yyyy"
-      className="form-control"
-      autoComplete="off"
-    />
-  </div>
-</div>
-
-
-
+            <label htmlFor="state" className="form-label ms-2">
+              Payment Date:
+            </label>
+            <div className="col-md-1 d-flex">
+              <DatePicker
+                selected={paymentDate}
+                onChange={handlePaymentDateChange}
+                dateFormat="dd-MM-yyyy"
+                className="form-control"
+                autoComplete="off"
+                style={{ width: "50", height: "35px" }}
+              />
+            </div>
+          </div>
           <div className="row">
             <ApiDataTableModal
               onAcCodeClick={handleMillCodeClick}
@@ -279,13 +501,14 @@ const TenderPurchaseHead = () => {
               onIdClick={handleBrokerCodeClick}
             />
           </div>
-     
         </form>
       </div>
-      <TenderPurchaseDetail/>
+      <br></br>
+
+      <div style={{ borderBottom: "2px dotted black", marginBottom: "10px" }} />
+      <TenderPurchaseDetail />
     </div>
   );
 };
 
 export default TenderPurchaseHead;
-

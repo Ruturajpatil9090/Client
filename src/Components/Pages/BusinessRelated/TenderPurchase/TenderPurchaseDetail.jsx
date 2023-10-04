@@ -3,14 +3,14 @@ import CustomDatePicker from "../../../common/DateRangePicker";
 import "../../../../App.css";
 import ApiDataTableDetail from "../../../commonFunctions/ApiDataTableDetail";
 
-const RecordForm = () => {
+const TenderPurchaseDetail = () => {
   const [records, setRecords] = useState([]);
   const [formData, setFormData] = useState({
     state: "R",
     companyAddress: "",
     selectedDate: null,
     tdsCutByUs: false,
-    saleRate:""
+    saleRate: "",
   });
   const [editIndex, setEditIndex] = useState(null);
   const [markedForDeletionIndex, setMarkedForDeletionIndex] = useState(null);
@@ -23,18 +23,27 @@ const RecordForm = () => {
   };
 
   const handleDateChange = (date) => {
-    setFormData((prevData) => ({
-      ...prevData,
-      selectedDate: date,
-    }));
+    // Check if the selected date is within the accounting year (1 Apr 2023 to 31 Mar 2024)
+    const isWithinAccountingYear = date >= new Date(2023, 3, 1) && date <= new Date(2024, 2, 31);
+  
+    if (isWithinAccountingYear) {
+      setFormData((prevData) => ({
+        ...prevData,
+        selectedDate: date,
+      }));
+    } else {
+      // Display a message or take appropriate action for an invalid date
+      console.log('Please select a date within the accounting year (1 Apr 2023 to 31 Mar 2024).');
+    }
   };
+  
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
 
     const newRecord = {
       ...formData,
-      billingTo: millCode, 
+      billingTo: millCode,
     };
 
     if (editIndex !== null) {
@@ -50,8 +59,9 @@ const RecordForm = () => {
       companyAddress: "",
       selectedDate: null,
       tdsCutByUs: false,
-      saleRate:""
+      saleRate: "",
     });
+   
   };
 
   const handleEdit = (index) => {
@@ -96,7 +106,7 @@ const RecordForm = () => {
       companyAddress: "",
       selectedDate: null,
       tdsCutByUs: false,
-      saleRate:""
+      saleRate: "",
     });
     if (editIndex !== null) {
       setEditIndex(null);
@@ -105,7 +115,9 @@ const RecordForm = () => {
 
   return (
     <div>
-      <h1>Record Form</h1>
+      <center>
+          <h4>Tender Purchase Detail</h4>
+        </center>
       <form onSubmit={handleFormSubmit} className="row g-3">
         <div className="row g-3">
           <div className="col-md-6 d-flex align-items-center">
@@ -153,6 +165,7 @@ const RecordForm = () => {
             <CustomDatePicker
               selectedDate={formData.selectedDate}
               onChange={handleDateChange}
+              required
             />
           </div>
 
@@ -168,21 +181,18 @@ const RecordForm = () => {
           </div>
 
           <div className="col-md-1 d-flex align-items-center">
-  <label htmlFor="saleRate" className="form-label">
-    Sale Rate:
-  </label>
-  <input
-    type="text"
-    className="form-control"
-    name="saleRate"
-    value={formData.saleRate}
-    onChange={handleInputChange}
-    autoComplete="off"
-    pattern="[0-9]*"
-  
-  />
-</div>
-
+            <label htmlFor="saleRate" className="form-label">
+              Sale Rate:
+            </label>
+            <input
+              type="text"
+              className="form-control"
+              name="saleRate"
+              value={formData.saleRate}
+              onChange={handleInputChange}
+              autoComplete="off"
+            />
+          </div>
 
           <div className="col-md-1 d-flex align-items-center">
             <button className="btn btn-primary" type="submit">
@@ -206,7 +216,7 @@ const RecordForm = () => {
       <table className=" table-bordered table">
         <thead>
           <tr>
-            <th >Action</th>
+            <th>Action</th>
             <th>Row Action</th>
             <th>Company Address</th>
             <th>Resale/Mill</th>
@@ -249,4 +259,4 @@ const RecordForm = () => {
   );
 };
 
-export default RecordForm;
+export default TenderPurchaseDetail;

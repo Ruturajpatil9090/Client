@@ -20,41 +20,8 @@ const ApiDataTableModal = ({
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
-  const [enteredBpCode, setEnteredenteredBpCode] = useState("");
-  const [enteredBpName, setEnteredenteredBpName] = useState("");
   const [selectedRowIndex, setSelectedRowIndex] = useState(-1);
 
-  //   const fetchAndOpenPopupData = async () => {
-  //     try {
-  //       const response = await axios.get(
-  //         "http://localhost:5000/groupmaster/gethelperall"
-  //       );
-  //       const data = response.data;
-  //       setPopupContent(data);
-  //       setShowModal(true);
-  //     } catch (error) {
-  //       console.error("Error fetching data:", error);
-  //     }
-  //   };
-
-  //   const handleBpAccountButtonClick = () => {
-  //     lActiveInputFeild = "BpAccountInput";
-  //     fetchAndOpenPopupData();
-  //     if (onIdClick) {
-  //       onIdClick(enteredBpCode);
-  //     }
-  //   };
-
-  //   const handleBpAccountChange = (event) => {
-  //     const { value } = event.target;
-
-  //     setEnteredenteredBpCode(value);
-
-  //     const matchingItems = popupContent.find(
-  //       (item) => item.Ac_Code === parseInt(value, 10)
-  //     );
-  //     setEnteredenteredBpName(matchingItems ? matchingItems.Ac_Name_E : "");
-  //   };
 
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
@@ -131,13 +98,7 @@ const ApiDataTableModal = ({
       if (onBrokerButtonClick) {
         onBrokerButtonClick(item.Ac_Code);
       }
-      // } else if (lActiveInputFeild === "BpAccountInput") {
-      //   setEnteredenteredBpCode(item.Ac_Code);
-      //   console.log(item.Ac_Code);
-      //   setEnteredenteredBpName(item.Ac_Name_E);
-      //   if (onIdClick) {
-      //     onIdClick(item.Ac_Code);
-      //   }
+      
     }
 
     console.log("Closing modal");
@@ -233,6 +194,7 @@ const ApiDataTableModal = ({
             style={{ width: "150px" }}
             required
             aria-describedby="millCodeInputHelp"
+            autoComplete="off"
             
           />
          
@@ -258,6 +220,7 @@ const ApiDataTableModal = ({
             value={enteredBrokerCode}
             onChange={handleBrokerCodeChange}
             style={{ width: "150px" }}
+            autoComplete="off"
           />
           <Button
             variant="primary"

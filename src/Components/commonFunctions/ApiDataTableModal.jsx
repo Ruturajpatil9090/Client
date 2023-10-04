@@ -223,24 +223,26 @@ const ApiDataTableModal = ({
   
   return (
     <div className="d-flex flex-row ">
-      <div className="d-flex mt-2 align-items-center">
-        <label htmlFor="millCodeInput" className=" form-label">
+      <label htmlFor="millCodeInput" className=" form-label">
           Mill Code:
         </label>
+      <div className="d-flex ">
+        
         <div className="d-flex">
           <input
             type="text"
-            className="form-control ms-3"
+            className="form-control ms-2"
             id="millCodeInput"
            
             value={enteredAcCode}
             onChange={handleAcCodeChange}
-            style={{ width: "150px" }}
+            style={{ width: "150px",height:"35px" }}
           />
           <Button
             variant="primary"
             onClick={handleMillCodeButtonClick}
             className="ms-1"
+            style={{ width: "30px",height:"35px" }}
           >
             ...
           </Button>
@@ -250,10 +252,12 @@ const ApiDataTableModal = ({
         </div>
       </div>
 
-      <div className="d-flex mt-2 align-items-center">
-        <label htmlFor="brokerCodeInput" className="form-label">
+
+      <label htmlFor="brokerCodeInput" className="form-label">
           Broker Code:
         </label>
+      <div className="d-flex ">
+       
         <div className="d-flex">
           <input
             type="text"
@@ -262,12 +266,13 @@ const ApiDataTableModal = ({
           
             value={enteredBrokerCode}
             onChange={handleBrokerCodeChange}
-            style={{ width: "150px" }}
+            style={{ width: "150px",height:"35px" }}
           />
           <Button
             variant="primary"
             onClick={handleBrokerButtonClick}
             className="ms-1"
+            style={{ width: "30px",height:"35px" }}
           >
            ...
           </Button>
@@ -379,10 +384,12 @@ const ApiDataTableModal = ({
         </Modal.Footer>
       </Modal>
 
-      <div className="d-flex mt-2 align-items-center">
-        <label htmlFor="brokerCodeInput" className="form-label">
+
+      <label htmlFor="brokerCodeInput" className="form-label">
           Bp Account:
         </label>
+      <div className="d-flex ">
+       
         <div className="d-flex">
           <input
             type="text"
@@ -390,12 +397,13 @@ const ApiDataTableModal = ({
             id="BpAccountInput"
             value={enteredBpCode}
             onChange={handleBpAccountChange}
-            style={{ width: "150px" }}
+            style={{ width: "150px",height:"35px" }}
           />
           <Button
             variant="primary"
             onClick={handleBpAccountButtonClick}
             className="ms-1"
+            style={{ width: "30px",height:"35px" }}
           >
            ...
           </Button>

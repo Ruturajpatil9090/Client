@@ -30,7 +30,8 @@ function GroupMasterDetail() {
 
   useEffect(() => {
     fetchPosts();
-  }, []);
+  }, [searchTerm]);
+  
 
   const fetchPosts = async () => {
     try {
@@ -60,10 +61,17 @@ function GroupMasterDetail() {
   };
 
   const getPaginatedData = () => {
+    const filteredData = fetchedData.filter((post) => {
+      const millShortName = post.millshortname || ''; 
+      return millShortName.toLowerCase().includes(searchTerm.toLowerCase());
+    });
+  
     const startIndex = (currentPage - 1) * perPage;
     const endIndex = startIndex + perPage;
-    return fetchedData.slice(startIndex, endIndex);
+  
+    return filteredData.slice(startIndex, endIndex);
   };
+  
 
   // const handleSearchTermChange = (event) => {
   //   setSearchTerm(event.target.value);
@@ -86,7 +94,8 @@ function GroupMasterDetail() {
       <br />
       <br />
 
-      {/* <SearchBar value={""} onChange={""} /> */}
+      <SearchBar value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+
       <PerPageSelect value={perPage} onChange={handlePerPageChange} />
       <TableContainer>
         <h1>Posts Table</h1>
