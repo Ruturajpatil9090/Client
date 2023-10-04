@@ -220,6 +220,12 @@ const TenderPurchaseHead = () => {
     setHighlightedButton(button);
   };
 
+  const handleKeyDown = (event, handler) => {
+    if (event.key === "Enter") {
+      handler();
+    }
+  };
+
   return (
     <div>
       <div>
@@ -238,6 +244,8 @@ const TenderPurchaseHead = () => {
           <button
             onClick={handleAddOne}
             disabled={!addOneButtonEnabled}
+            onKeyDown={(event) => handleKeyDown(event, handleAddOne)}
+            tabIndex={0}  
             style={{
               backgroundColor: addOneButtonEnabled ? "blue" : "white",
               color: addOneButtonEnabled ? "white" : "black",
@@ -246,6 +254,7 @@ const TenderPurchaseHead = () => {
               width: "4%",
               height: "35px",
               fontSize: "12px",
+              
             }}
           >
             Add New
@@ -253,6 +262,7 @@ const TenderPurchaseHead = () => {
           {isEditMode ? (
             <button
               onClick={handleSaveOrUpdate}
+              onKeyDown={(event) => handleKeyDown(event,handleSaveOrUpdate)}
               style={{
                 backgroundColor: "blue",
                 color: "white",
@@ -269,6 +279,7 @@ const TenderPurchaseHead = () => {
             <button
               onClick={handleSaveOrUpdate}
               disabled={!saveButtonEnabled}
+              onKeyDown={(event) => handleKeyDown(event,handleSaveOrUpdate)}
               style={{
                 backgroundColor: saveButtonEnabled ? "blue" : "white",
                 color: saveButtonEnabled ? "white" : "black",
@@ -285,6 +296,8 @@ const TenderPurchaseHead = () => {
           <button
             onClick={handleEdit}
             disabled={!editButtonEnabled}
+            onKeyDown={(event) => handleKeyDown(event, handleEdit)}
+           
             style={{
               backgroundColor: editButtonEnabled ? "blue" : "white",
               color: editButtonEnabled ? "white" : "black",
@@ -315,6 +328,7 @@ const TenderPurchaseHead = () => {
           <button
             onClick={handleCancel}
             disabled={!cancelButtonEnabled}
+            onKeyDown={(event) => handleKeyDown(event, handleCancel)}
             style={{
               backgroundColor: cancelButtonEnabled ? "blue" : "white",
               color: cancelButtonEnabled ? "white" : "black",
@@ -330,6 +344,9 @@ const TenderPurchaseHead = () => {
           <button
             onClick={handleBack}
             disabled={!backButtonEnabled}
+            onKeyDown={(event) => handleKeyDown(event, handleBack)}
+            
+        
             style={{
               backgroundColor: backButtonEnabled ? "blue" : "white",
               color: backButtonEnabled ? "white" : "black",
