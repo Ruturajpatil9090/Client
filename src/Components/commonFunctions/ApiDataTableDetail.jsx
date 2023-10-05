@@ -5,6 +5,7 @@ import DataTablePagination from "../common/DataTablePagination";
 import axios from "axios";
 import "../../App.css";
 
+
 var lActiveInputFeild = "";
 const ApiDataTableModal = ({
   onAcCodeClick,
@@ -153,23 +154,8 @@ const ApiDataTableModal = ({
         event.preventDefault();
         handleRecordDoubleClick(itemsToDisplay[selectedRowIndex]);
       }
-
-      // Ensure the selected row is in view when using arrow keys
-      const modalBody = document.querySelector(".modal-body");
-      const selectedRow = document.querySelector(".selected-row");
-      if (modalBody && selectedRow) {
-        const selectedRowOffset = selectedRow.offsetTop;
-        const modalBodyOffset = modalBody.scrollTop;
-        const modalBodyHeight = modalBody.clientHeight;
-
-        if (selectedRowOffset < modalBodyOffset) {
-          modalBody.scrollTop = selectedRowOffset;
-        } else if (selectedRowOffset > modalBodyOffset + modalBodyHeight) {
-          modalBody.scrollTop =
-            selectedRowOffset - modalBodyHeight + selectedRow.clientHeight;
-        }
-      }
     };
+    
 
     window.addEventListener("keydown", handleKeyDown);
 
@@ -205,7 +191,7 @@ const ApiDataTableModal = ({
           >
             ...
           </Button>
-          <label id="acNameLabel" className="ms-2">
+          <label id="acNameLabel" className="form-labels ms-2">
             {enteredAcName}
           </label>
         </div>
@@ -229,7 +215,7 @@ const ApiDataTableModal = ({
           >
             ...
           </Button>
-          <label id="acNameLabel" className="ms-2">
+          <label id="acNameLabel" className="form-labels ms-2">
             {enteredBrokerName}
           </label>
         </div>

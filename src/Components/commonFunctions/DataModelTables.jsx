@@ -41,42 +41,61 @@ function DataTableModal({ showModal, onClose, data, onRecordClick, headers }) {
   const currentItems = filteredData.slice(indexOfFirstItem, indexOfLastItem);
 
   return (
-    <Modal show={showModal} onHide={onClose}>
-      <Modal.Header closeButton>
-        <Modal.Title>Data Table</Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-        <DataTableSearch data={data} onSearch={handleSearch} />
-        <table className="table">
-          <thead>
-            <tr>
-              {headers.map((header) => (
-                <th key={header.key}>{header.label}</th>
-              ))}
+    <Modal
+        show={showModal}
+        onHide={handleCloseModal}
+        dialogClassName="modal-dialog modal-fullscreen"
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Popup</Modal.Title>
+        </Modal.Header>
+        <DataTableSearch data={popupContent} onSearch={handleSearch} />
+        <Modal.Body>
+  {Array.isArray(popupContent) ? (
+    <div className="table-responsive">
+      <table className="custom-table">
+        <thead>
+          <tr>
+            <th>Account Code</th>
+            <th>Account Name</th>
+            <th>Account Type</th>
+            <th>City Name</th>
+            <th>Address</th>
+          </tr>
+        </thead>
+        <tbody>
+          {itemsToDisplay.map((item, index) => (
+            <tr
+              key={index}
+              className={selectedRowIndex === index ? "selected-row" : ""}
+              onDoubleClick={() => handleRecordDoubleClick(item)}
+            >
+              <td>{item.Ac_Code}</td>
+              <td>{item.Ac_Name_E}</td>
+              <td>{item.Ac_type}</td>
+              <td>{item.cityname}</td>
+              <td>{item.Address_E}</td>
             </tr>
-          </thead>
-          <tbody>
-            {currentItems.map((item) => (
-              <tr key={item.Ac_Code} onDoubleClick={() => handleRecordClick(item)}>
-                {headers.map((header) => (
-                  <td key={`${item.Ac_Code}_${header.key}`}>{item[header.key]}</td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        <DataTablePagination
-          totalItems={filteredData.length}
-          itemsPerPage={itemsPerPage}
-          onPageChange={handlePageChange}
-        />
-      </Modal.Body>
-      <Modal.Footer>
-        <Button variant="secondary" onClick={onClose}>
-          Close
-        </Button>
-      </Modal.Footer>
-    </Modal>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  ) : (
+    "Loading..."
+  )}
+</Modal.Body>
+
+        <Modal.Footer>
+          <DataTablePagination
+            totalItems={filteredData.length}
+            itemsPerPage={itemsPerPage}
+            onPageChange={handlePageChange}
+          />
+          <Button variant="secondary" onClick={handleCloseModal}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
   );
 }
 

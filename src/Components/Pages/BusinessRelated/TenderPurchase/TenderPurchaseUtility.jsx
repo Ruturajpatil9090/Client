@@ -19,9 +19,7 @@ import PerPageSelect from "../../../UtilityCommon/PerPageSelect";
 import "../../../../App.css";
 import axios from "axios";
 
-// ... (existing imports)
-
-function GroupMasterDetail() {
+function TenderPurchaseUtility() {
   const [fetchedData, setFetchedData] = useState([]);
   const [perPage, setPerPage] = useState(15);
   const [currentPage, setCurrentPage] = useState(1);
@@ -31,11 +29,12 @@ function GroupMasterDetail() {
   useEffect(() => {
     fetchPosts();
   }, [searchTerm]);
-  
 
   const fetchPosts = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/groupmaster/getutilitydata");
+      const response = await axios.get(
+        "http://localhost:5000/groupmaster/getutilitydata"
+      );
       console.log(response);
       setFetchedData(response.data);
     } catch (error) {
@@ -48,12 +47,14 @@ function GroupMasterDetail() {
   };
 
   const handleRowClick = (doc_no) => {
-    navigate("/business/tender_purchase", { state: { editRecordCode: doc_no } });
+    navigate("/business/tender_purchase", {
+      state: { editRecordCode: doc_no },
+    });
   };
 
   const handlePerPageChange = (event) => {
-    setPerPage(parseInt(event.target.value, 10)); 
-    setCurrentPage(1); 
+    setPerPage(parseInt(event.target.value, 10));
+    setCurrentPage(1);
   };
 
   const handlePageChange = (pageNumber) => {
@@ -62,29 +63,15 @@ function GroupMasterDetail() {
 
   const getPaginatedData = () => {
     const filteredData = fetchedData.filter((post) => {
-      const millShortName = post.millshortname || ''; 
+      const millShortName = post.millshortname || "";
       return millShortName.toLowerCase().includes(searchTerm.toLowerCase());
     });
-  
+
     const startIndex = (currentPage - 1) * perPage;
     const endIndex = startIndex + perPage;
-  
+
     return filteredData.slice(startIndex, endIndex);
   };
-  
-
-  // const handleSearchTermChange = (event) => {
-  //   setSearchTerm(event.target.value);
-  //   setCurrentPage(1); // Reset to the first page when changing the search term
-  // };
-
-  // const getFilteredData = () => {
-  //   // Filter the fetched data based on the search term
-  //   return fetchedData.filter((post) =>
-  //     post.tenderdoname.toLowerCase().includes(searchTerm.toLowerCase())
-  //   );
-  // };
-
 
   return (
     <div className="App">
@@ -94,7 +81,10 @@ function GroupMasterDetail() {
       <br />
       <br />
 
-      <SearchBar value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+      <SearchBar
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+      />
 
       <PerPageSelect value={perPage} onChange={handlePerPageChange} />
       <TableContainer>
@@ -114,7 +104,6 @@ function GroupMasterDetail() {
               <TableCell>Broker Short Name</TableCell>
               <TableCell>Lifting Date</TableCell>
               <TableCell>tenderid</TableCell>
-
             </TableRow>
           </TableHead>
           <TableBody>
@@ -150,4 +139,4 @@ function GroupMasterDetail() {
   );
 }
 
-export default GroupMasterDetail;
+export default TenderPurchaseUtility;

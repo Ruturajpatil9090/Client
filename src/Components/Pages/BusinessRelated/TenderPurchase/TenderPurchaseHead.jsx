@@ -1,15 +1,19 @@
-import React, { useState, useEffect } from "react";
-import FormButtons from "../../../common/CommonButtons";
+import React, { useState, useEffect, useRef } from "react";
 import "../../../../App.css";
 import { useNavigate } from "react-router-dom";
 import ApiDataTableModal from "../../../commonFunctions/ApiDataTableModal";
 import axios from "axios";
-import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import TenderPurchaseDetail from "./TenderPurchaseDetail";
 
 const TenderPurchaseHead = () => {
   const navigate = useNavigate();
+  const addNewButtonRef = useRef(null);
+  const resaleMillDropdownRef = useRef(null);
+  const updateButtonRef = useRef(null);
+  const saveButtonRef = useRef(null);
+  const [updateButtonClicked, setUpdateButtonClicked] = useState(false);
+  const [saveButtonClicked, setSaveButtonClicked] = useState(false);
 
   const [data, setData] = useState([]);
   const [millCode, setMillCode] = useState("");
@@ -24,15 +28,9 @@ const TenderPurchaseHead = () => {
   const [editButtonEnabled, setEditButtonEnabled] = useState(false);
   const [deleteButtonEnabled, setDeleteButtonEnabled] = useState(false);
   const [backButtonEnabled, setBackButtonEnabled] = useState(true);
-
   const [isEditMode, setIsEditMode] = useState(false);
-
   const [highlightedButton, setHighlightedButton] = useState(null);
-
-  const defaultSelectedDate = selectedDate || new Date();
-
-  const minDate = new Date(2023, 3, 1);
-  const maxDate = new Date(2024, 2, 31);
+  const [cancelButtonClicked, setCancelButtonClicked] = useState(false);
 
   const [formData, setFormData] = useState({
     Tender_No: "",
@@ -47,6 +45,8 @@ const TenderPurchaseHead = () => {
   });
 
   useEffect(() => {
+    const currentDate = new Date().toISOString().split("T")[0];
+    setPaymentDate(currentDate);
     getLatestTenderNo();
   }, []);
 
@@ -67,14 +67,8 @@ const TenderPurchaseHead = () => {
       });
   };
 
-  const handleDateChange = (date) => {
-    date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
-    setSelectedDate(date);
-  };
-
   const handlePaymentDateChange = (date) => {
-    date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
-    setPaymentDate(date);
+    setPaymentDate(date.target.value);
   };
 
   const handleMillCodeClick = (code) => {
@@ -99,52 +93,53 @@ const TenderPurchaseHead = () => {
     setEditButtonEnabled(false);
     setDeleteButtonEnabled(false);
     setIsEditMode(false);
+    if (resaleMillDropdownRef.current) {
+      resaleMillDropdownRef.current.focus();
+    }
   };
-  const handleSave = () => {
-    axios
-      .get("http://localhost:5000/groupmaster/getalltender")
-      .then((response) => {
-        const lastTenderNo = response.data.latestTenderNo;
-        console.log(lastTenderNo);
-        const nextTenderNo = lastTenderNo ? lastTenderNo + 1 : 1;
+  // const handleSave = () => {
+  //   axios
+  //     .get("http://localhost:5000/groupmaster/getalltender")
+  //     .then((response) => {
+  //       const lastTenderNo = response.data.latestTenderNo;
+  //       console.log(lastTenderNo);
+  //       const nextTenderNo = lastTenderNo ? lastTenderNo + 1 : 1;
 
-        const updatedFormData = {
-          ...formData,
-          millCode,
-          bpAccount,
-          brokerCode,
-          Tender_No: nextTenderNo,
-        };
+  //       const updatedFormData = {
+  //         ...formData,
+  //         millCode,
+  //         bpAccount,
+  //         brokerCode,
+  //         Tender_No: nextTenderNo,
+  //       };
 
-        const payload = {
-          headData: {
-            ...updatedFormData,
-            Tender_Date: selectedDate
-              ? selectedDate.toISOString().split("T")[0]
-              : null,
-            Lifting_Date: paymentDate
-              ? paymentDate.toISOString().split("T")[0]
-              : null,
-            Mill_Code: millCode,
-            Bp_Account: bpAccount,
-            Broker: brokerCode,
-          },
-          detailData: [],
-        };
+  //       const payload = {
+  //         headData: {
+  //           ...updatedFormData,
+  //           Tender_Date: selectedDate,
+  //
+  //           Lifting_Date: paymentDate,
+  //
+  //           Mill_Code: millCode,
+  //           Bp_Account: bpAccount,
+  //           Broker: brokerCode,
+  //         },
+  //         detailData: [],
+  //       };
 
-        axios
-          .post("http://localhost:5000/groupmaster/inserttender", payload)
-          .then((response) => {
-            console.log("API Response:", response.data);
-          })
-          .catch((error) => {
-            console.error("Error:", error);
-          });
-      })
-      .catch((error) => {
-        console.error("Error fetching last Tender_No:", error);
-      });
-  };
+  //       axios
+  //         .post("http://localhost:5000/groupmaster/inserttender", payload)
+  //         .then((response) => {
+  //           console.log("API Response:", response.data);
+  //         })
+  //         .catch((error) => {
+  //           console.error("Error:", error);
+  //         });
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error fetching last Tender_No:", error);
+  //     });
+  // };
 
   const handleEdit = () => {
     setIsEditMode(true);
@@ -154,6 +149,9 @@ const TenderPurchaseHead = () => {
     setEditButtonEnabled(false);
     setDeleteButtonEnabled(false);
     setBackButtonEnabled(true);
+    if (resaleMillDropdownRef.current) {
+      resaleMillDropdownRef.current.focus();
+    }
   };
 
   const handleSaveOrUpdate = () => {
@@ -165,6 +163,7 @@ const TenderPurchaseHead = () => {
       setBackButtonEnabled(true);
       setSaveButtonEnabled(false);
       setCancelButtonEnabled(false);
+      setUpdateButtonClicked(true);
     } else {
       setIsEditMode(false);
       setAddOneButtonEnabled(true);
@@ -173,6 +172,8 @@ const TenderPurchaseHead = () => {
       setBackButtonEnabled(true);
       setSaveButtonEnabled(false);
       setCancelButtonEnabled(false);
+      addNewButtonRef.current.focus();
+      setSaveButtonClicked(true);
     }
   };
 
@@ -197,6 +198,7 @@ const TenderPurchaseHead = () => {
     setBackButtonEnabled(true);
     setSaveButtonEnabled(false);
     setCancelButtonEnabled(false);
+    setCancelButtonClicked(true);
   };
 
   const handleSubmit = (event) => {
@@ -223,8 +225,29 @@ const TenderPurchaseHead = () => {
   const handleKeyDown = (event, handler) => {
     if (event.key === "Enter") {
       handler();
+      addNewButtonRef.current.focus();
+      if (handler === handleAddOne || handler === handleEdit) {
+        if (resaleMillDropdownRef.current) {
+          resaleMillDropdownRef.current.focus();
+        }
+      }
     }
   };
+
+  useEffect(() => {
+    if (cancelButtonClicked && addNewButtonRef.current) {
+      addNewButtonRef.current.focus();
+      setCancelButtonClicked(false);
+    }
+    if (updateButtonClicked && addNewButtonRef.current) {
+      addNewButtonRef.current.focus();
+      setUpdateButtonClicked(false);
+    }
+    if (saveButtonClicked && addNewButtonRef.current) {
+      addNewButtonRef.current.focus();
+      setSaveButtonClicked(false);
+    }
+  }, [cancelButtonClicked, updateButtonClicked, saveButtonClicked]);
 
   return (
     <div>
@@ -238,14 +261,14 @@ const TenderPurchaseHead = () => {
             marginBottom: "10px",
             display: "flex",
             gap: "10px",
-            
           }}
         >
           <button
             onClick={handleAddOne}
+            ref={addNewButtonRef}
             disabled={!addOneButtonEnabled}
             onKeyDown={(event) => handleKeyDown(event, handleAddOne)}
-            tabIndex={0}  
+            tabIndex={0}
             style={{
               backgroundColor: addOneButtonEnabled ? "blue" : "white",
               color: addOneButtonEnabled ? "white" : "black",
@@ -254,7 +277,6 @@ const TenderPurchaseHead = () => {
               width: "4%",
               height: "35px",
               fontSize: "12px",
-              
             }}
           >
             Add New
@@ -262,7 +284,7 @@ const TenderPurchaseHead = () => {
           {isEditMode ? (
             <button
               onClick={handleSaveOrUpdate}
-              onKeyDown={(event) => handleKeyDown(event,handleSaveOrUpdate)}
+              onKeyDown={(event) => handleKeyDown(event, handleSaveOrUpdate)}
               style={{
                 backgroundColor: "blue",
                 color: "white",
@@ -279,7 +301,7 @@ const TenderPurchaseHead = () => {
             <button
               onClick={handleSaveOrUpdate}
               disabled={!saveButtonEnabled}
-              onKeyDown={(event) => handleKeyDown(event,handleSaveOrUpdate)}
+              onKeyDown={(event) => handleKeyDown(event, handleSaveOrUpdate)}
               style={{
                 backgroundColor: saveButtonEnabled ? "blue" : "white",
                 color: saveButtonEnabled ? "white" : "black",
@@ -297,7 +319,6 @@ const TenderPurchaseHead = () => {
             onClick={handleEdit}
             disabled={!editButtonEnabled}
             onKeyDown={(event) => handleKeyDown(event, handleEdit)}
-           
             style={{
               backgroundColor: editButtonEnabled ? "blue" : "white",
               color: editButtonEnabled ? "white" : "black",
@@ -345,8 +366,6 @@ const TenderPurchaseHead = () => {
             onClick={handleBack}
             disabled={!backButtonEnabled}
             onKeyDown={(event) => handleKeyDown(event, handleBack)}
-            
-        
             style={{
               backgroundColor: backButtonEnabled ? "blue" : "white",
               color: backButtonEnabled ? "white" : "black",
@@ -359,58 +378,58 @@ const TenderPurchaseHead = () => {
           >
             Back
           </button>
-        
         </div>
-        <div style={{ float: 'right', marginTop: '-40px' }}>
-      <button
-        style={{
-          border: '1px solid #ccc',
-          backgroundColor: highlightedButton === 'first' ? 'black' : 'blue',
-          color: 'white',
-          width: "100px",
+        <div style={{ float: "right", marginTop: "-40px" }}>
+          <button
+            style={{
+              border: "1px solid #ccc",
+              backgroundColor: highlightedButton === "first" ? "black" : "blue",
+              color: "white",
+              width: "100px",
               height: "35px",
-        }}
-        onClick={() => handleButtonClick('first')}
-      >
-        &lt;&lt; 
-      </button>
-      <button
-        style={{
-          border: '1px solid #ccc',
-          backgroundColor: highlightedButton === 'previous' ? 'black' : 'blue',
-          color: 'white',
-          width: "100px",
-          height: "35px",
-        }}
-        onClick={() => handleButtonClick('previous')}
-      >
-        &lt; 
-      </button>
-      <button
-        style={{
-          border: '1px solid #ccc',
-          backgroundColor: highlightedButton === 'next' ? 'black' : 'blue',
-          color: 'white',
-          width: "100px",
-          height: "35px",
-        }}
-        onClick={() => handleButtonClick('next')}
-      >
-        &gt;
-      </button>
-      <button
-        style={{
-          border: '1px solid #ccc',
-          backgroundColor: highlightedButton === 'last' ? 'black' : 'blue',
-          color: 'white',
-          width: "100px",
-          height: "35px",
-        }}
-        onClick={() => handleButtonClick('last')}
-      >
-        &gt;&gt;
-      </button>
-    </div>
+            }}
+            onClick={() => handleButtonClick("first")}
+          >
+            &lt;&lt;
+          </button>
+          <button
+            style={{
+              border: "1px solid #ccc",
+              backgroundColor:
+                highlightedButton === "previous" ? "black" : "blue",
+              color: "white",
+              width: "100px",
+              height: "35px",
+            }}
+            onClick={() => handleButtonClick("previous")}
+          >
+            &lt;
+          </button>
+          <button
+            style={{
+              border: "1px solid #ccc",
+              backgroundColor: highlightedButton === "next" ? "black" : "blue",
+              color: "white",
+              width: "100px",
+              height: "35px",
+            }}
+            onClick={() => handleButtonClick("next")}
+          >
+            &gt;
+          </button>
+          <button
+            style={{
+              border: "1px solid #ccc",
+              backgroundColor: highlightedButton === "last" ? "black" : "blue",
+              color: "white",
+              width: "100px",
+              height: "35px",
+            }}
+            onClick={() => handleButtonClick("last")}
+          >
+            &gt;&gt;
+          </button>
+        </div>
 
         <form onSubmit={handleSubmit}>
           <div className="d-flex">
@@ -438,6 +457,7 @@ const TenderPurchaseHead = () => {
                 className="form-select"
                 value={formData.type}
                 onChange={handleInputChange}
+                ref={resaleMillDropdownRef}
                 autoComplete="off"
                 style={{ width: "50", height: "35px" }}
               >
@@ -481,34 +501,21 @@ const TenderPurchaseHead = () => {
               </select>
             </div>
 
-            <label htmlFor="state" className="form-label ms-2">
+            <label htmlFor="state" className="">
               Date:
             </label>
-            <div className="col-md-1 d-flex ">
-              <DatePicker
-                selected={defaultSelectedDate}
-                onChange={handleDateChange}
-                dateFormat="dd-MM-yyyy"
-                className="form-control"
-                autoComplete="off"
-                minDate={minDate}
-                maxDate={maxDate}
-                style={{ width: "50px", height: "35px" }}
-              />
-            </div>
-
-            <label htmlFor="state" className="form-label ms-2">
-              Payment Date:
-            </label>
-            <div className="col-md-1 d-flex">
-              <DatePicker
-                selected={paymentDate}
-                onChange={handlePaymentDateChange}
-                dateFormat="dd-MM-yyyy"
-                className="form-control"
-                autoComplete="off"
-                style={{ width: "50", height: "35px" }}
-              />
+            <div className="form-group">
+              <div className="col-sm-12">
+                <input
+                  type="date"
+                  className="form-control"
+                  id="datePicker"
+                  onChange={handlePaymentDateChange}
+                  value={paymentDate}
+                  min="2023-04-01"
+                  max="2024-03-31"
+                />
+              </div>
             </div>
           </div>
           <div className="row">

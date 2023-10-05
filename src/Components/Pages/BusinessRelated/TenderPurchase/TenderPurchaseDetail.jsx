@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import CustomDatePicker from "../../../common/DateRangePicker";
 import "../../../../App.css";
 import ApiDataTableDetail from "../../../commonFunctions/ApiDataTableDetail";
+import ApiDataTableModal from "../../../commonFunctions/ApiDataTableModal";
 
 const TenderPurchaseDetail = () => {
   const [records, setRecords] = useState([]);
@@ -120,8 +121,10 @@ const TenderPurchaseDetail = () => {
         </center>
       <form onSubmit={handleFormSubmit} className="row g-3">
         <div className="row g-3">
+       
           <div className="col-md-6 d-flex align-items-center">
-            <ApiDataTableDetail onAcCodeClick={handleMillCodeClick} />
+          <ApiDataTableDetail onAcCodeClick={handleMillCodeClick} />
+
             <div className="col-n1">
               <label htmlFor="state" className="form-label ms-4">
                 Delivery Type:

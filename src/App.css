@@ -134,8 +134,9 @@ header {
 
 
 
-.form-label {
+.form-labels {
   font-weight: bold;
+  color: blue;
   display: flex;
   margin-bottom: 5px;
 }
@@ -147,28 +148,6 @@ header {
   margin-bottom: 10px;
 } 
 
-/* Adjust other styles as needed */
-
-
-.dtHorizontalVerticalExampleWrapper {
-  max-width: 100px;
-  margin: 0 auto;
-}
-#dtHorizontalVerticalExample th, td {
-  white-space: nowrap;
-}
-table.dataTable thead .sorting:after,
-table.dataTable thead .sorting:before,
-table.dataTable thead .sorting_asc:after,
-table.dataTable thead .sorting_asc:before,
-table.dataTable thead .sorting_asc_disabled:after,
-table.dataTable thead .sorting_asc_disabled:before,
-table.dataTable thead .sorting_desc:after,
-table.dataTable thead .sorting_desc:before,
-table.dataTable thead .sorting_desc_disabled:after,
-table.dataTable thead .sorting_desc_disabled:before {
-  bottom: .5em;
-}
 
 
 #data-grid-demo {
@@ -180,5 +159,39 @@ table.dataTable thead .sorting_desc_disabled:before {
   background-color: red;
  
 }
+
+.full-screen-modal {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  overflow: auto;
+}
+
+.selected-row {
+  background-color: orange; 
+}
+
+
+/* Add this CSS to your stylesheet */
+.custom-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 10px;
+}
+
+.custom-table th, .custom-table td {
+  border: 1px solid #ccc;
+  padding: 10px;
+}
+
+.custom-table th {
+  background-color: #f0f0f0;
+}
+
+.custom-table tr:hover {
+  background-color: #f9f9f9;
+}
+
+
 
 

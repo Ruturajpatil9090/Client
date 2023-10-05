@@ -1,5 +1,5 @@
-// components/DataTablePagination.js
 import React, { useState } from "react";
+import "bootstrap/dist/css/bootstrap.min.css"; // Import Bootstrap CSS
 
 function DataTablePagination({ totalItems, itemsPerPage, onPageChange }) {
   const [currentPage, setCurrentPage] = useState(1);
@@ -13,22 +13,32 @@ function DataTablePagination({ totalItems, itemsPerPage, onPageChange }) {
   };
 
   return (
-    <div className="pagination-container">
-      <button
-        disabled={currentPage === 1}
-        onClick={() => handlePageChange(currentPage - 1)}
-      >
-        Previous
-      </button>
-      <span>
-        Page {currentPage} of {totalPages}
-      </span>
-      <button
-        disabled={currentPage === totalPages}
-        onClick={() => handlePageChange(currentPage + 1)}
-      >
-        Next
-      </button>
+    <div className="d-flex justify-content-center my-4"> {/* Center align and add margin */}
+      <nav>
+        <ul className="pagination">
+          <li className={`page-item ${currentPage === 1 ? "disabled" : ""}`}>
+            <button
+              className="page-link"
+              onClick={() => handlePageChange(currentPage - 1)}
+            >
+              Previous
+            </button>
+          </li>
+          <li className="page-item">
+            <span className="page-link">
+              Page {currentPage} of {totalPages}
+            </span>
+          </li>
+          <li className={`page-item ${currentPage === totalPages ? "disabled" : ""}`}>
+            <button
+              className="page-link"
+              onClick={() => handlePageChange(currentPage + 1)}
+            >
+              Next
+            </button>
+          </li>
+        </ul>
+      </nav>
     </div>
   );
 }
