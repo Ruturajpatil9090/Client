@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Button, Modal } from "react-bootstrap";
-import DataTableSearch from "../common/DataTableSearch";
-import DataTablePagination from "../common/DataTablePagination";
+import DataTableSearch from "../../common/DataTableSearch";
+import DataTablePagination from "../../common/DataTablePagination";
 import axios from "axios";
 import "../../App.css";
 
@@ -22,6 +22,8 @@ const ApiDataTableModal = ({
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
   const [selectedRowIndex, setSelectedRowIndex] = useState(-1);
+
+
 
 
   const handlePageChange = (newPage) => {

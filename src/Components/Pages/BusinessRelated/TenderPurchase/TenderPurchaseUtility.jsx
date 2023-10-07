@@ -13,9 +13,9 @@ import {
   Select,
   MenuItem,
 } from "@mui/material";
-import Pagination from "../../../UtilityCommon/Pagination";
-import SearchBar from "../../../UtilityCommon/SearchBar";
-import PerPageSelect from "../../../UtilityCommon/PerPageSelect";
+import Pagination from "../../../../UtilityCommon/Pagination";
+import SearchBar from "../../../../UtilityCommon/SearchBar";
+import PerPageSelect from "../../../../UtilityCommon/PerPageSelect";
 import "../../../../App.css";
 import axios from "axios";
 

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import CustomDatePicker from "../../../common/DateRangePicker";
+import CustomDatePicker from "../../../../common/DateRangePicker";
 import "../../../../App.css";
 import ApiDataTableDetail from "../../../commonFunctions/ApiDataTableDetail";
 import ApiDataTableModal from "../../../commonFunctions/ApiDataTableModal";

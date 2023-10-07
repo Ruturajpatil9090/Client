@@ -6,34 +6,28 @@ import axios from "axios";
 import "../../App.css";
 
 var lActiveInputFeild = "";
-var mc ="";
-const ApiDataTableModal = ({
-  onAcCodeClick,
-  onBrokerButtonClick,
-  onIdClick,
-}) => {
-  //Manage the states of applications
+var mc = "";
+const ApiDataTableModal = ({ onAcCodeClick, acType,name,companyCode }) => {
+   //Manage the states of applications
   const [showModal, setShowModal] = useState(false);
   const [popupContent, setPopupContent] = useState([]);
   const [enteredAcCode, setEnteredAcCode] = useState("");
   const [enteredAcName, setEnteredAcName] = useState("");
   const [enteredAccoid, setEnteredAccoid] = useState("");
-
-  const [enteredBrokerCode, setEnteredBrokerCode] = useState("");
-  const [enteredBrokerName, setEnteredBrokerName] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
-  const [enteredBpCode, setEnteredenteredBpCode] = useState("");
-  const [enteredBpName, setEnteredenteredBpName] = useState("");
+
   const [selectedRowIndex, setSelectedRowIndex] = useState(-1);
 
-  //getting data from API's
-  const fetchAndOpenPopup = async (acType) => {
+
+  // Fetch data based on acType
+  const fetchAndOpenPopup = async () => {
     try {
-      const response = await axios.get(
-        `http://localhost:5000/groupmaster/gethelper?Ac_type=${acType}`
-      );
+     let Comapny_Code = companyCode;
+     console.log(Comapny_Code)
+  
+      const response = await axios.get(`http://localhost:5000/groupmaster/gethelper?Ac_type=${acType}&Company_Code=${Comapny_Code}`);
       const data = response.data;
       setPopupContent(data);
       setShowModal(true);
@@ -41,100 +35,50 @@ const ApiDataTableModal = ({
       console.error("Error fetching data:", error);
     }
   };
-
-  const fetchAndOpenPopupData = async () => {
-    try {
-      const response = await axios.get(
-        "http://localhost:5000/groupmaster/gethelperall"
-      );
-      const data = response.data;
-      setPopupContent(data);
-      setShowModal(true);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
-
-  //onClick button event for Mill Code,Broker Code and Bp Account
+  
+  // Handle Mill Code button click
   const handleMillCodeButtonClick = () => {
-    lActiveInputFeild = "millCodeInput";
-    fetchAndOpenPopup("M");
+     lActiveInputFeild = name;
+    fetchAndOpenPopup();
     if (onAcCodeClick) {
       onAcCodeClick(enteredAcCode);
     }
   };
 
-  const handleBrokerButtonClick = () => {
-    lActiveInputFeild = "brokerCodeInput";
-    fetchAndOpenPopup("B");
-    if (onBrokerButtonClick) {
-      onBrokerButtonClick(enteredBrokerCode);
-    }
-  };
-
-  const handleBpAccountButtonClick = () => {
-    lActiveInputFeild = "BpAccountInput";
-    fetchAndOpenPopupData();
-    if (onIdClick) {
-      onIdClick(enteredBpCode);
-    }
-  };
-
-  //popup functionality show and hide
+    //popup functionality show and hide
   const handleCloseModal = () => {
     setShowModal(false);
   };
-
-
-  
 
   //handle onChange event for Mill Code,Broker Code and Bp Account
   const handleAcCodeChange = (event) => {
     const { value } = event.target;
     setEnteredAcCode(value);
+    
+    // Check if the active input field is mill code input
+    if (lActiveInputFeild === name) {
+      // Update enteredAcName based on the input field value
+      setEnteredAcName(value);
+    }
+
     const matchingItem = popupContent.find((item) => item.Ac_Code === parseInt(value, 10));
-    fetchAndOpenPopup("M")
+
     if (matchingItem) {
       setEnteredAcName(matchingItem.Ac_Name_E);
       setEnteredAccoid(matchingItem.accoid);
       mc = matchingItem.accoid;
-      console.log("mc code is:",mc)
+      console.log("mc code is:", mc);
       console.log("Ac_Name_E:", matchingItem.Ac_Name_E);
-      // console.log("accoid:", matchingItem.accoid);
     } else {
-      setEnteredAcName(""); 
-      setEnteredAccoid(""); 
+      setEnteredAcName("");
+      setEnteredAccoid("");
     }
   };
 
 
-  const handleBrokerCodeChange = (event) => {
-    const { value } = event.target;
-
-    setEnteredBrokerCode(value);
-    
-    const matchingItems = popupContent.find(
-      
-      (item) => item.Ac_Code === parseInt(value, 10)
-    );
-    fetchAndOpenPopup()
-    setEnteredBrokerName(matchingItems ? matchingItems.Ac_Name_E : "");
-  };
-
-  const handleBpAccountChange = (event) => {
-    const { value } = event.target;
-
-    setEnteredenteredBpCode(value);
-
-    const matchingItems = popupContent.find(
-      (item) => item.Ac_Code === parseInt(value, 10)
-    );
-    setEnteredenteredBpName(matchingItems ? matchingItems.Ac_Name_E : "");
-  };
-
   //After open popup onDoubleClick event that record display on the feilds
   const handleRecordDoubleClick = (item) => {
-    if (lActiveInputFeild === "millCodeInput") {
+    if (lActiveInputFeild === name) {
       setEnteredAcCode(item.Ac_Code);
       mc = item.accoid;
       console.log("mc code is:",mc);
@@ -142,21 +86,8 @@ const ApiDataTableModal = ({
       if (onAcCodeClick) {
         onAcCodeClick(item.Ac_Code);
       }
-    } else if (lActiveInputFeild === "brokerCodeInput") {
-      setEnteredBrokerCode(item.Ac_Code);
-      setEnteredBrokerName(item.Ac_Name_E);
-      if (onBrokerButtonClick) {
-        onBrokerButtonClick(item.Ac_Code);
-      }
-    } else if (lActiveInputFeild === "BpAccountInput") {
-      setEnteredenteredBpCode(item.Ac_Code);
-      console.log(item.Ac_Code);
-      setEnteredenteredBpName(item.Ac_Name_E);
-      if (onIdClick) {
-        onIdClick(item.Ac_Code);
-      }
-    }
-
+    } 
+    
     console.log("Closing modal");
     setShowModal(false);
   };
@@ -180,27 +111,17 @@ const ApiDataTableModal = ({
   const endIndex = startIndex + itemsPerPage;
   const itemsToDisplay = filteredData.slice(startIndex, endIndex);
 
-
-  //f1 popup open on f1 key press and arrow up and down functionality
+  // Handle key events
   useEffect(() => {
-    const handleKeyEvents = (event,item) => {
-      if (event.key === "F1") {
-        if (event.target.id === "millCodeInput") {
-        
-          fetchAndOpenPopup("M");
-          // var mc = item.accoid
-          // console.log("mc code is:",mc);
-          event.preventDefault();
-        } else if (event.target.id === "brokerCodeInput") {
-          lActiveInputFeild = "brokerCodeInput";
-          fetchAndOpenPopup("B");
-          event.preventDefault();
-        } else if (event.target.id === "BpAccountInput") {
-          lActiveInputFeild = "BpAccountInput";
-          fetchAndOpenPopupData();
+    const handleKeyEvents = async (event) => {
+      if (event.key === "F1" && acType) {
+        if (event.target.id === name) {
+          lActiveInputFeild = name
+          fetchAndOpenPopup();
+          
           event.preventDefault();
         }
-      } else if (event.key === "ArrowUp") {
+      } else if (event.key === "ArrowUp" ) {
         event.preventDefault();
         setSelectedRowIndex((prev) => Math.max(prev - 1, 0));
       } else if (event.key === "ArrowDown") {
@@ -208,33 +129,31 @@ const ApiDataTableModal = ({
         setSelectedRowIndex((prev) =>
           Math.min(prev + 1, itemsToDisplay.length - 1)
         );
-      } else if (event.key === "Enter") {
+      } else if (event.key === "Enter" ) {
         event.preventDefault();
-        handleRecordDoubleClick(itemsToDisplay[selectedRowIndex]);
+        // Check if a row is selected
+        if (selectedRowIndex >= 0) {
+          handleRecordDoubleClick(itemsToDisplay[selectedRowIndex]);
+        }
       }
     };
-
+  
     window.addEventListener("keydown", handleKeyEvents);
-
+  
     return () => {
       window.removeEventListener("keydown", handleKeyEvents);
     };
-  }, [selectedRowIndex, itemsToDisplay]);
-
-
+  }, [selectedRowIndex, itemsToDisplay, acType, name, fetchAndOpenPopup, handleRecordDoubleClick]);
+  
 
   return (
     <div className="d-flex flex-row ">
-      {/* Mill Code  */}
-      <label htmlFor="millCodeInput" className=" form-label">
-        Mill Code:
-      </label>
       <div className="d-flex ">
         <div className="d-flex">
           <input
             type="text"
             className="form-control ms-2"
-            id="millCodeInput"
+            id={name}
             autoComplete="off"
             value={enteredAcCode}
             onChange={handleAcCodeChange}
@@ -253,66 +172,6 @@ const ApiDataTableModal = ({
           </label>
         </div>
       </div>
-
-      {/* Broker Code */}
-      <label htmlFor="brokerCodeInput" className="form-label ms-3">
-        Broker Code:
-      </label>
-      <div className="d-flex ">
-        <div className="d-flex">
-          <input
-            type="text"
-            className="form-control ms-3"
-            id="brokerCodeInput"
-            autoComplete="off"
-            value={enteredBrokerCode}
-            onChange={handleBrokerCodeChange}
-            style={{ width: "150px", height: "35px" }}
-          />
-          <Button
-            variant="primary"
-            onClick={handleBrokerButtonClick}
-            className="ms-1"
-            style={{ width: "30px", height: "35px" }}
-          >
-            ...
-          </Button>
-          <label id="acNameLabel" className="form-labels ms-2">
-            {enteredBrokerName}
-          </label>
-        </div>
-      </div>
-
-      {/* Bp Account */}
-      <label htmlFor="brokerCodeInput" className="form-label ms-2">
-        Bp Account:
-      </label>
-      <div className="d-flex ">
-        <div className="d-flex">
-          <input
-            type="text"
-            className="form-control ms-3"
-            id="BpAccountInput"
-            autoComplete="off"
-            value={enteredBpCode}
-            onChange={handleBpAccountChange}
-            style={{ width: "150px", height: "35px" }}
-          />
-          <Button
-            variant="primary"
-            onClick={handleBpAccountButtonClick}
-            className="ms-1"
-            style={{ width: "30px", height: "35px" }}
-          >
-            ...
-          </Button>
-          <label id="acNameLabel" className="form-labels ms-2">
-            {enteredBpName}
-          </label>
-        </div>
-      </div>
-
-      {/* popup model  */}
       <Modal
         show={showModal}
         onHide={handleCloseModal}

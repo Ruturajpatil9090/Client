@@ -4,9 +4,16 @@ import { useNavigate } from "react-router-dom";
 import ApiDataTableModal from "../../../commonFunctions/ApiDataTableModal";
 import axios from "axios";
 import "react-datepicker/dist/react-datepicker.css";
-import TenderPurchaseDetail from "./TenderPurchaseDetail";
+//import Import Detail Component.........................................;
+import ApiAccountHelp from "../../../commonFunctions/ApiAccountHelp";
+import BrokerHelp from "../../../commonFunctions/ApiAccountHelp";
+import GroupMasterHelper from "../../../commonFunctions/GroupMasterHelper";
+import GstStateMasterHelper from "../../../commonFunctions/GstStateMasterHelper";
+import CityMasterHelper from "../../../commonFunctions/CityMasterHelper";
+import GstRateMasterHelper from "../../../commonFunctions/GstRateMasterHelper";
+import ItemMasterHelper from "../../../commonFunctions/ItemMasterHelper"
 
-const TenderPurchaseHead = () => {
+const TenderHead = () => {
   const navigate = useNavigate();
   const addNewButtonRef = useRef(null);
   const resaleMillDropdownRef = useRef(null);
@@ -14,14 +21,6 @@ const TenderPurchaseHead = () => {
   const saveButtonRef = useRef(null);
   const [updateButtonClicked, setUpdateButtonClicked] = useState(false);
   const [saveButtonClicked, setSaveButtonClicked] = useState(false);
-
-  const [data, setData] = useState([]);
-  const [millCode, setMillCode] = useState("");
-  const [bpAccount, setBpAccount] = useState("");
-  const [brokerCode, setBrokerCode] = useState("");
-  const [selectedDate, setSelectedDate] = useState(null);
-  const [paymentDate, setPaymentDate] = useState(null);
-
   const [addOneButtonEnabled, setAddOneButtonEnabled] = useState(false);
   const [saveButtonEnabled, setSaveButtonEnabled] = useState(true);
   const [cancelButtonEnabled, setCancelButtonEnabled] = useState(true);
@@ -31,61 +30,70 @@ const TenderPurchaseHead = () => {
   const [isEditMode, setIsEditMode] = useState(false);
   const [highlightedButton, setHighlightedButton] = useState(null);
   const [cancelButtonClicked, setCancelButtonClicked] = useState(false);
+  const [mill_code, setMill_Code] = useState("");
+  const [grade, setGrade] = useState("");
+  const [payment_to, setPayment_To] = useState("");
+  const [tender_from, setTender_From] = useState("");
+  const [tender_do, setTender_DO] = useState("");
+  const [voucher_by, setVoucher_By] = useState("");
+  const [broker, setBroker] = useState("");
+  const [itemcode, setitemcode] = useState("");
+  const [gstratecode, setgstratecode] = useState("");
+  const [bp_account, setBp_Account] = useState("");
+  const [tender_date, setTender_Date] = useState(null);
+  const [lifting_date, setLifting_Date] = useState(null);
+
+  const [acType, setAcType] = useState("");
+  const [companyCode, setcompanyCode] = useState("");
 
   const [formData, setFormData] = useState({
     Tender_No: "",
-    Company_Code: 1,
-    type: "R",
-    Temptender: "Y",
-    millCode: "",
-    Year_Code: 3,
-    AutoPurchaseBill: "Y",
-    bpAccount: "",
-    brokerCode: "",
+    Company_Code: "",
+    Tender_Date: null,
+    Lifting_Date: null,
+    Mill_Code: "",
+    Grade: "",
+    Quantal: "",
+    Packing: "",
+    Bags: "",
+    Payment_To: "",
+    Tender_From: "",
+    Tender_DO: "",
+    Voucher_By: "",
+    Broker: "",
+    Excise_Rate: "",
+    Narration: "",
+    Mill_Rate: "",
+    Created_By: "",
+    Modified_By: "",
+    Year_Code: "",
+    Purc_Rate: "",
+    Branch_Id: "",
+    Voucher_No: "",
+    Sell_Note_No: "",
+    Brokrage: "",
+    tenderid: "",
+    mc: "",
+    itemcode: "",
+    season: "",
+    pt: "",
+    tf: "",
+    td: "",
+    vb: "",
+    bk: "",
+    ic: "",
+    gstratecode: "",
+    CashDiff: "",
+    TCS_Rate: "",
+    TCS_Amt: "",
+    commissionid: "",
+    Voucher_Type: "",
+    Party_Bill_Rate: "",
+    TDS_Rate: "",
+    TDS_Amt: "",
+    Bp_Account: "",
+    bp: "",
   });
-
-  useEffect(() => {
-    const currentDate = new Date().toISOString().split("T")[0];
-    setPaymentDate(currentDate);
-    getLatestTenderNo();
-  }, []);
-
-  const getLatestTenderNo = () => {
-    axios
-      .get("http://localhost:5000/groupmaster/getalltender")
-      .then((response) => {
-        const lastTenderNo = response.data.latestTenderNo;
-        console.log(lastTenderNo);
-
-        setFormData((prevFormData) => ({
-          ...prevFormData,
-          Tender_No: lastTenderNo ? lastTenderNo + 1 : 1,
-        }));
-      })
-      .catch((error) => {
-        console.error("Error fetching last Tender_No:", error);
-      });
-  };
-
-  const handlePaymentDateChange = (date) => {
-    setPaymentDate(date.target.value);
-  };
-
-  const handleMillCodeClick = (code) => {
-    setMillCode(code);
-    console.log("Mill code clicked:", code);
-  };
-
-  const handleItemCodeClick = (code) => {
-    setBpAccount(code);
-    console.log("Bp_Account:", code);
-  };
-
-  const handleBrokerCodeClick = (data) => {
-    setBrokerCode(data);
-    console.log("Broker:", data);
-  };
-
   const handleAddOne = () => {
     setAddOneButtonEnabled(false);
     setSaveButtonEnabled(true);
@@ -97,7 +105,6 @@ const TenderPurchaseHead = () => {
       resaleMillDropdownRef.current.focus();
     }
   };
-
   const handleEdit = () => {
     setIsEditMode(true);
     setAddOneButtonEnabled(false);
@@ -110,7 +117,6 @@ const TenderPurchaseHead = () => {
       resaleMillDropdownRef.current.focus();
     }
   };
-
   const handleSaveOrUpdate = () => {
     if (isEditMode) {
       setIsEditMode(false);
@@ -133,7 +139,6 @@ const TenderPurchaseHead = () => {
       setSaveButtonClicked(true);
     }
   };
-
   const handleBack = () => {
     navigate("/business/tender_utility");
   };
@@ -146,7 +151,6 @@ const TenderPurchaseHead = () => {
     setSaveButtonEnabled(false);
     setCancelButtonEnabled(false);
   };
-
   const handleCancel = () => {
     setIsEditMode(false);
     setAddOneButtonEnabled(true);
@@ -157,28 +161,12 @@ const TenderPurchaseHead = () => {
     setCancelButtonEnabled(false);
     setCancelButtonClicked(true);
   };
-
   const handleSubmit = (event) => {
     event.preventDefault();
   };
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
-
-  const handleFirst = () => {};
-
-  const handleLast = () => {};
-
-  const handlePrevious = () => {};
-
-  const handleNext = () => {};
-
   const handleButtonClick = (button) => {
     setHighlightedButton(button);
   };
-
   const handleKeyDown = (event, handler) => {
     if (event.key === "Enter") {
       handler();
@@ -190,26 +178,9 @@ const TenderPurchaseHead = () => {
       }
     }
   };
-
-  useEffect(() => {
-    if (cancelButtonClicked && addNewButtonRef.current) {
-      addNewButtonRef.current.focus();
-      setCancelButtonClicked(false);
-    }
-    if (updateButtonClicked && addNewButtonRef.current) {
-      addNewButtonRef.current.focus();
-      setUpdateButtonClicked(false);
-    }
-    if (saveButtonClicked && addNewButtonRef.current) {
-      addNewButtonRef.current.focus();
-      setSaveButtonClicked(false);
-    }
-  }, [cancelButtonClicked, updateButtonClicked, saveButtonClicked]);
-
   return (
-    <div>
+    <>
       <div>
-       
         <div
           style={{
             marginTop: "10px",
@@ -250,7 +221,7 @@ const TenderPurchaseHead = () => {
                 fontSize: "12px",
               }}
             >
-              Update
+              update
             </button>
           ) : (
             <button
@@ -333,9 +304,8 @@ const TenderPurchaseHead = () => {
           >
             Back
           </button>
-          
-          <h5 style={{marginLeft:"300px"}}>Tender Purchase Head</h5>
-      
+
+          <h5 style={{ marginLeft: "300px" }}>Tender Purchase Head</h5>
         </div>
         <div style={{ float: "right", marginTop: "-40px" }}>
           <button
@@ -388,109 +358,24 @@ const TenderPurchaseHead = () => {
             &gt;&gt;
           </button>
         </div>
-
-        <form onSubmit={handleSubmit}>
-          <div className="d-flex">
-            <label htmlFor="code" className="form-label ">
-              Tender No:
-            </label>
-            <div className="col-md-1 d-flex ">
-              <input
-                type="text"
-                className="form-control "
-                name="Tender_No"
-                value={formData.Tender_No}
-                onChange={handleInputChange}
-                autoComplete="off"
-                readOnly
-                style={{ width: "50", height: "35px" }}
-              />
-            </div>
-            <label htmlFor="state" className="form-label ms-1">
-              Resale/Mill:
-            </label>
-            <div className="col-md-1 d-flex ">
-              <select
-                name="type"
-                className="form-select"
-                value={formData.type}
-                onChange={handleInputChange}
-                ref={resaleMillDropdownRef}
-                autoComplete="off"
-                style={{ width: "50", height: "35px" }}
-              >
-                <option value="R">Resale</option>
-                <option value="M">Mill</option>
-                <option value="W">With Payment</option>
-                <option value="P">Party Bill Rate</option>
-              </select>
-            </div>
-
-            <label htmlFor="state" className="form-label ms-1">
-              Temp Tender:
-            </label>
-            <div className=" d-flex ">
-              <select
-                name="Temptender"
-                className="form-select"
-                value={formData.Temptender}
-                onChange={handleInputChange}
-                autoComplete="off"
-                style={{ width: "50", height: "35px" }}
-              >
-                <option value="Y">Yes</option>
-                <option value="N">No</option>
-              </select>
-            </div>
-            <label htmlFor="state" className="form-label ms-1 ">
-              Auto Purchase Bill:
-            </label>
-            <div className=" d-flex ">
-              <select
-                name="AutoPurchaseBill"
-                className="form-select"
-                value={formData.AutoPurchaseBill}
-                onChange={handleInputChange}
-                autoComplete="off"
-                style={{ width: "50", height: "35px" }}
-              >
-                <option value="Y">Yes</option>
-                <option value="N">No</option>
-              </select>
-            </div>
-
-            <label htmlFor="state" className="">
-              Date:
-            </label>
-            <div className="form-group">
-              <div className="col-sm-12">
-                <input
-                  type="date"
-                  className="form-control"
-                  id="datePicker"
-                  onChange={handlePaymentDateChange}
-                  value={paymentDate}
-                  min="2023-04-01"
-                  max="2024-03-31"
-                />
-              </div>
-            </div>
-          </div>
-          <div className="row">
-            <ApiDataTableModal
-              onAcCodeClick={handleMillCodeClick}
-              onBrokerButtonClick={handleItemCodeClick}
-              onIdClick={handleBrokerCodeClick}
-            />
-          </div>
-        </form>
       </div>
-      <br></br>
-
-      <div style={{ borderBottom: "2px dotted black", marginBottom: "10px" }} />
-      <TenderPurchaseDetail />
-    </div>
+      <div className="d-flex">
+        <label className="form-label">Mill Code:</label>
+        <ApiAccountHelp acType="M" companyCode={1} name="MillCode" />
+        <label className="form-label">Broker Code:</label>
+        <BrokerHelp acType="B" companyCode={1} name="brokerCode" />
+        <label className="form-label">Group Master:</label>
+        <GroupMasterHelper   name="groupmasterhelp" />
+        <label className="form-label">Gst State Master:</label>
+        <GstStateMasterHelper   name="gststatemasterhelper" />
+        <label className="form-label">City Master:</label>
+        <CityMasterHelper   name="citymasterhelper" />
+        <label className="form-label">Gst Rate Master:</label>
+        <GstRateMasterHelper   name="gstratemasterhelper" />
+        <label className="form-label">Item Master:</label>
+        <ItemMasterHelper   name="itemcodemaster" />
+      </div>
+    </>
   );
 };
-
-export default TenderPurchaseHead;
+export default TenderHead;
