@@ -192,6 +192,12 @@ export const menuItems = [
     {
       title: 'Utilities',
       url: '/utilities',
+      submenu: [
+        {
+          title: 'User Creation',
+          url: '/utilities/user_creation_utility',
+        },
+      ]
     },
     {
       title: 'Gst Utilities',
@@ -213,4 +219,12 @@ export const menuItems = [
       title: 'LogOut',
       url: '/logout',
     },
+
+    
+  
+
+
+
   ];
+
+ 

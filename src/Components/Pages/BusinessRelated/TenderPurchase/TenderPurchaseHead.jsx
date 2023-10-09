@@ -406,19 +406,9 @@ const TenderPurchaseHead = () => {
                 style={{ width: "50", height: "35px" }}
               />
             </div>
-            <label htmlFor="state" className="form-label ms-1">
-              Resale/Mill:
-            </label>
+            <label className="form-label ms-1">Resale/Mill:</label>
             <div className="col-md-1 d-flex ">
-              <select
-                name="type"
-                className="form-select"
-                value={formData.type}
-                onChange={handleInputChange}
-                ref={resaleMillDropdownRef}
-                autoComplete="off"
-                style={{ width: "50", height: "35px" }}
-              >
+              <select name="type" className="form-select" value={formData.type} onChange={handleInputChange} ref={resaleMillDropdownRef} autoComplete="off" style={{ width: "50", height: "35px" }}>
                 <option value="R">Resale</option>
                 <option value="M">Mill</option>
                 <option value="W">With Payment</option>
@@ -459,9 +449,7 @@ const TenderPurchaseHead = () => {
               </select>
             </div>
 
-            <label htmlFor="state" className="">
-              Date:
-            </label>
+            <label >Date:</label>
             <div className="form-group">
               <div className="col-sm-12">
                 <input
@@ -475,6 +463,7 @@ const TenderPurchaseHead = () => {
                 />
               </div>
             </div>
+
           </div>
           <div className="row">
             <ApiDataTableModal

@@ -390,7 +390,7 @@ function Menu() {
                   <a href="#">General Info Throught SMS</a>
                 </li>
                 <li>
-                  <a href="#">User Creation</a>
+                  <a href="/utilities/user_creation_utility">User Creation</a>
                 </li>
                 <li>
                   <a href="#">Gropu User Creation</a>

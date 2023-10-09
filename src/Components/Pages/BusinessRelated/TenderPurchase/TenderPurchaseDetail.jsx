@@ -184,17 +184,8 @@ const TenderPurchaseDetail = () => {
           </div>
 
           <div className="col-md-1 d-flex align-items-center">
-            <label htmlFor="saleRate" className="form-label">
-              Sale Rate:
-            </label>
-            <input
-              type="text"
-              className="form-control"
-              name="saleRate"
-              value={formData.saleRate}
-              onChange={handleInputChange}
-              autoComplete="off"
-            />
+            <label className="form-label">Sale Rate:</label>
+            <input type="text" className="form-control" name="saleRate" value={formData.saleRate} onChange={handleInputChange} autoComplete="off"/>
           </div>
 
           <div className="col-md-1 d-flex align-items-center">

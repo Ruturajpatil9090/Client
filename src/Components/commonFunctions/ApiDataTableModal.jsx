@@ -30,9 +30,10 @@ const ApiDataTableModal = ({
 
   //getting data from API's
   const fetchAndOpenPopup = async (acType) => {
+    const Comapny_Code=1
     try {
       const response = await axios.get(
-        `http://localhost:5000/groupmaster/gethelper?Ac_type=${acType}`
+        `http://localhost:5000/groupmaster/gethelper?Ac_type=${acType}&Company_Code=${Comapny_Code}`
       );
       const data = response.data;
       setPopupContent(data);
