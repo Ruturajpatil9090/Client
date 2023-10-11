@@ -17,90 +17,84 @@ import Apigstratecode from "../../../commonFunctions/ApiAccountHelp";
 //import Import Detail Component.........................................;
 
 const Text1 = () => {
-const navigate = useNavigate();
-const  addNewButtonRef = useRef(null);
-const  resaleMillDropdownRef = useRef(null);
-const  updateButtonRef = useRef(null);
-const  saveButtonRef = useRef(null);
-const  [updateButtonClicked, setUpdateButtonClicked] = useState(false);
-const  [saveButtonClicked, setSaveButtonClicked] = useState(false);
-const  [addOneButtonEnabled, setAddOneButtonEnabled] = useState(false);
-const  [saveButtonEnabled, setSaveButtonEnabled] = useState(true);
-const  [cancelButtonEnabled, setCancelButtonEnabled] = useState(true);
-const  [editButtonEnabled, setEditButtonEnabled] = useState(false);
-const  [deleteButtonEnabled, setDeleteButtonEnabled] = useState(false);
-const  [backButtonEnabled, setBackButtonEnabled] = useState(true);
-const  [isEditMode, setIsEditMode] = useState(false);
-const  [highlightedButton, setHighlightedButton] = useState(null);
-const  [cancelButtonClicked, setCancelButtonClicked] = useState(false);
-const  [mill_code, setMill_Code] = useState("");
-const  [itemcode, setitemcode] = useState("");
-const  [grade, setGrade] = useState("");
-const  [bp_account, setBp_Account] = useState("");
-const  [payment_to, setPayment_To] = useState("");
-const  [tender_from, setTender_From] = useState("");
-const  [tender_do, setTender_DO] = useState("");
-const  [voucher_by, setVoucher_By] = useState("");
-const  [broker, setBroker] = useState("");
-const  [gstratecode, setgstratecode] = useState("");
-const  [tender_date, setTender_Date] = useState(null);
-const  [lifting_date, setLifting_Date] = useState(null);
- const [formData, setFormData] = useState({
-Tender_No:"",
-Tender_Date:null,
-Lifting_Date:null,
-Mill_Code:"",
-season:"",
-itemcode:"",
-Grade:"",
-Quantal:"",
-Packing:"",
-Bags:"",
-Mill_Rate:"",
-Purc_Rate:"",
-Party_Bill_Rate:"",
-Bp_Account:"",
-CashDiff:"",
-Payment_To:"",
-Tender_From:"",
-Tender_DO:"",
-Voucher_By:"",
-Broker:"",
-Brokrage:"",
-gstratecode:"",
-Excise_Rate:"",
-Sell_Note_No:"",
-Narration:"",
-TCS_Rate:"",
-TCS_Amt:"",
-TDS_Rate:"",
-TDS_Amt:"",
-Company_Code:"",
-Created_By:"",
-Modified_By:"",
-Year_Code:"",
-Branch_Id:"",
-Voucher_No:"",
-tenderid:"",
-mc:"",
-pt:"",
-tf:"",
-td:"",
-vb:"",
-bk:"",
-ic:"",
-commissionid:"",
-Voucher_Type:"",
-bp:"",
+  const navigate = useNavigate();
+  const addNewButtonRef = useRef(null);
+  const resaleMillDropdownRef = useRef(null);
+  const updateButtonRef = useRef(null);
+  const saveButtonRef = useRef(null);
+  const [updateButtonClicked, setUpdateButtonClicked] = useState(false);
+  const [saveButtonClicked, setSaveButtonClicked] = useState(false);
+  const [addOneButtonEnabled, setAddOneButtonEnabled] = useState(false);
+  const [saveButtonEnabled, setSaveButtonEnabled] = useState(true);
+  const [cancelButtonEnabled, setCancelButtonEnabled] = useState(true);
+  const [editButtonEnabled, setEditButtonEnabled] = useState(false);
+  const [deleteButtonEnabled, setDeleteButtonEnabled] = useState(false);
+  const [backButtonEnabled, setBackButtonEnabled] = useState(true);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [highlightedButton, setHighlightedButton] = useState(null);
+  const [cancelButtonClicked, setCancelButtonClicked] = useState(false);
+  const [tender_date, setTender_Date] = useState(null);
+  const [lifting_date, setLifting_Date] = useState(null);
+  const [millCode, setMillCode] = useState("");
+
+  const [formData, setFormData] = useState({
+    Tender_No: "",
+    Tender_Date: null,
+    Lifting_Date: null,
+    Mill_Code: "",
+    season: "",
+    itemcode: "",
+    Grade: "",
+    Quantal: "",
+    Packing: "",
+    Bags: "",
+    Mill_Rate: "",
+    Purc_Rate: "",
+    Party_Bill_Rate: "",
+    Bp_Account: "",
+    CashDiff: "",
+    Payment_To: "",
+    Tender_From: "",
+    Tender_DO: "",
+    Voucher_By: "",
+    Broker: "",
+    Brokrage: "",
+    gstratecode: "",
+    Excise_Rate: "",
+    Sell_Note_No: "",
+    Narration: "",
+    TCS_Rate: "",
+    TCS_Amt: "",
+    TDS_Rate: "",
+    TDS_Amt: "",
+    Company_Code: "",
+    Created_By: "",
+    Modified_By: "",
+    Year_Code: "",
+    Branch_Id: "",
+    Voucher_No: "",
+    tenderid: "",
+    mc: "",
+    pt: "",
+    tf: "",
+    td: "",
+    vb: "",
+    bk: "",
+    ic: "",
+    commissionid: "",
+    Voucher_Type: "",
+    bp: "",
   });
+
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
- const handleTender_DateChange = (date) => {
+  const handleTender_DateChange = (date) => {
     setTender_Date(date.target.value);
   };
- const handleLifting_DateChange = (date) => {
+  const handleLifting_DateChange = (date) => {
     setLifting_Date(date.target.value);
   };
   const handleAddOne = () => {
@@ -110,9 +104,9 @@ bp:"",
     setEditButtonEnabled(false);
     setDeleteButtonEnabled(false);
     setIsEditMode(false);
-     if (resaleMillDropdownRef.current) {
+    if (resaleMillDropdownRef.current) {
       resaleMillDropdownRef.current.focus();
-     }
+    }
   };
   const handleEdit = () => {
     setIsEditMode(true);
@@ -122,32 +116,131 @@ bp:"",
     setEditButtonEnabled(false);
     setDeleteButtonEnabled(false);
     setBackButtonEnabled(true);
-     if (resaleMillDropdownRef.current) {
+    if (resaleMillDropdownRef.current) {
       resaleMillDropdownRef.current.focus();
-     }
+    }
   };
+
+
+  useEffect(() => {
+    getLatestTenderNo();
+    getData()
+  }, []);
+
+  const getLatestTenderNo = () => {
+    axios
+      .get("http://localhost:5000/groupmaster/getalltender")
+      .then((response) => {
+        const lastTenderNo = response.data.latestTenderNo;
+        console.log(lastTenderNo);
+
+        setFormData((prevFormData) => ({
+          ...prevFormData,
+          Tender_No: lastTenderNo ? lastTenderNo + 1 : 1,
+        }));
+      })
+      .catch((error) => {
+        console.error("Error fetching last Tender_No:", error);
+      });
+  };
+
+
+  // const getData = async () => {
+  //   try {
+  //     const response = await axios.get("http://localhost:5000/groupmaster/getalltenderdata");
+  //     const responseData = response.data;
+  
+  //     if (responseData.headData && responseData.detailData) {
+  //       const headData = responseData.headData;
+  //       const detailData = responseData.detailData;
+  
+  //       console.log("Head Data:", headData);
+  //       console.log("Detail Data:", detailData);
+  //     } else {
+  //       console.error("Invalid response format.");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error fetching data:", error.message);
+  //   }
+  // };
+
+
+  const getData = async () => {
+    try {
+      const response = await axios.get("http://localhost:5000/groupmaster/getalltenderdata");
+      const responseData = response.data;
+  
+      if (responseData.headData && responseData.headData.length > 0) {
+  
+        const lastRecord = responseData.headData[responseData.headData -1];
+        console.log("last record",lastRecord)
+
+        setFormData({
+          ...lastRecord,
+        });
+      } else {
+        console.error("No records found in headData.");
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error.message);
+    }
+  };
+  
+  
   const handleSaveOrUpdate = () => {
+    const apiUrlSaveOrUpdate = "http://localhost:5000/groupmaster/inserttender";
+  
     if (isEditMode) {
-    setIsEditMode(false);
-    setAddOneButtonEnabled(true);
-    setEditButtonEnabled(true);
-    setDeleteButtonEnabled(true);
-    setBackButtonEnabled(true);
-    setSaveButtonEnabled(false);
-    setCancelButtonEnabled(false);
-    setUpdateButtonClicked(true);
-     } else {
-    setIsEditMode(false);
-    setAddOneButtonEnabled(true);
-    setEditButtonEnabled(true);
-    setDeleteButtonEnabled(true);
-    setBackButtonEnabled(true);
-    setSaveButtonEnabled(false);
-    setCancelButtonEnabled(false);
-      addNewButtonRef.current.focus();
-    setSaveButtonClicked(true);
-     }
+      setIsEditMode(false);
+      setAddOneButtonEnabled(true);
+      setEditButtonEnabled(true);
+      setDeleteButtonEnabled(true);
+      setBackButtonEnabled(true);
+      setSaveButtonEnabled(false);
+      setCancelButtonEnabled(false);
+      setUpdateButtonClicked(true);
+    } else {
+      const postData = {
+        headData: {
+          Tender_No: formData.Tender_No,
+          Company_Code: 1,
+          Year_Code: 1,
+          Mill_Code: millCode,
+
+         
+        },
+        detailData: [
+          {
+            Tender_No: formData.Tender_No,
+            Company_Code: 1,
+            year_code: 1,
+            ID: 1,
+          }
+        ]
+      };
+
+      axios
+        .post(apiUrlSaveOrUpdate, postData)
+        .then((response) => {
+          console.log("Data saved successfully:", response.data);
+          setIsEditMode(false);
+          setAddOneButtonEnabled(true);
+          setEditButtonEnabled(true);
+          setDeleteButtonEnabled(true);
+          setBackButtonEnabled(true);
+          setSaveButtonEnabled(false);
+          setCancelButtonEnabled(false);
+          addNewButtonRef.current.focus();
+          setSaveButtonClicked(true);
+        })
+        .catch((error) => {
+          console.error("Error saving data:", error);
+        });
+    }
   };
+  
+  
+
   const handleBack = () => {
     navigate("/business/tender_utility");
   };
@@ -181,21 +274,28 @@ bp:"",
       handler();
       addNewButtonRef.current.focus();
       if (handler === handleAddOne || handler === handleEdit) {
-     if (resaleMillDropdownRef.current) {
-      resaleMillDropdownRef.current.focus();
-     }
-     }
-     }
+        if (resaleMillDropdownRef.current) {
+          resaleMillDropdownRef.current.focus();
+        }
+      }
+    }
   };
-return (
-<>
-<div>
 
+const handleMillCode=(code)=>{
+  setMillCode(code);
+  console.log("Mill code clicked:", code);
+}
+
+
+
+  return (
+    <>
+      <div>
         <div
           style={{
-            marginTop:"10px",
-            marginBottom:"10px",
-            display:"flex",
+            marginTop: "10px",
+            marginBottom: "10px",
+            display: "flex",
             gap: "10px",
           }}
         >
@@ -206,9 +306,9 @@ return (
             onKeyDown={(event) => handleKeyDown(event, handleAddOne)}
             tabIndex={0}
             style={{
-              backgroundColor: addOneButtonEnabled ?"blue" :"white",
-              color: addOneButtonEnabled ?"white" :"black",
-             border: "1px solid #ccc",
+              backgroundColor: addOneButtonEnabled ? "blue" : "white",
+              color: addOneButtonEnabled ? "white" : "black",
+              border: "1px solid #ccc",
               cursor: "pointer",
               width: "4%",
               height: "35px",
@@ -224,10 +324,10 @@ return (
               style={{
                 backgroundColor: "blue",
                 color: "white",
-             border: "1px solid #ccc",
-              cursor: "pointer",
-              width: "4%",
-              height: "35px",
+                border: "1px solid #ccc",
+                cursor: "pointer",
+                width: "4%",
+                height: "35px",
                 fontSize: "12px",
               }}
             >
@@ -239,13 +339,13 @@ return (
               disabled={!saveButtonEnabled}
               onKeyDown={(event) => handleKeyDown(event, handleSaveOrUpdate)}
               style={{
-                backgroundColor: saveButtonEnabled ?"blue" :"white",
-                color: saveButtonEnabled ?"white" :"black",
-             border: "1px solid #ccc",
-                cursor: saveButtonEnabled ?"pointer" :"not-allowed",
-              width: "4%",
-              height: "35px",
-                fontSize:"12px",
+                backgroundColor: saveButtonEnabled ? "blue" : "white",
+                color: saveButtonEnabled ? "white" : "black",
+                border: "1px solid #ccc",
+                cursor: saveButtonEnabled ? "pointer" : "not-allowed",
+                width: "4%",
+                height: "35px",
+                fontSize: "12px",
               }}
             >
               Save
@@ -256,13 +356,13 @@ return (
             disabled={!editButtonEnabled}
             onKeyDown={(event) => handleKeyDown(event, handleEdit)}
             style={{
-              backgroundColor: editButtonEnabled ?"blue" :"white",
-              color: editButtonEnabled ?"white" :"black",
-              border:"1px solid #ccc",
-              cursor: editButtonEnabled ?"pointer" :"not-allowed",
+              backgroundColor: editButtonEnabled ? "blue" : "white",
+              color: editButtonEnabled ? "white" : "black",
+              border: "1px solid #ccc",
+              cursor: editButtonEnabled ? "pointer" : "not-allowed",
               width: "4%",
-              height:"35px",
-              fontSize:"12px",
+              height: "35px",
+              fontSize: "12px",
             }}
           >
             Edit
@@ -271,13 +371,13 @@ return (
             onClick={handleDelete}
             disabled={!deleteButtonEnabled}
             style={{
-              backgroundColor: deleteButtonEnabled ?"blue" :"white",
-              color: deleteButtonEnabled ?"white" :"black",
-             border:"1px solid #ccc",
-              cursor: deleteButtonEnabled ?"pointer" :"not-allowed",
+              backgroundColor: deleteButtonEnabled ? "blue" : "white",
+              color: deleteButtonEnabled ? "white" : "black",
+              border: "1px solid #ccc",
+              cursor: deleteButtonEnabled ? "pointer" : "not-allowed",
               width: "4%",
-              height:"35px",
-              fontSize:"12px",
+              height: "35px",
+              fontSize: "12px",
             }}
           >
             Delete
@@ -287,13 +387,13 @@ return (
             disabled={!cancelButtonEnabled}
             onKeyDown={(event) => handleKeyDown(event, handleCancel)}
             style={{
-              backgroundColor: cancelButtonEnabled ?"blue" :"white",
-              color: cancelButtonEnabled ?"white" :"black",
-             border:"1px solid #ccc",
-              cursor: cancelButtonEnabled ?"pointer" :"not-allowed",
+              backgroundColor: cancelButtonEnabled ? "blue" : "white",
+              color: cancelButtonEnabled ? "white" : "black",
+              border: "1px solid #ccc",
+              cursor: cancelButtonEnabled ? "pointer" : "not-allowed",
               width: "4%",
-              height:"35px",
-              fontSize:"12px",
+              height: "35px",
+              fontSize: "12px",
             }}
           >
             Cancel
@@ -303,29 +403,28 @@ return (
             disabled={!backButtonEnabled}
             onKeyDown={(event) => handleKeyDown(event, handleBack)}
             style={{
-              backgroundColor: backButtonEnabled ?"blue" :"white",
-              color: backButtonEnabled ?"white" :"black",
-             border:"1px solid #ccc",
-              cursor: backButtonEnabled ?"pointer" :"not-allowed",
+              backgroundColor: backButtonEnabled ? "blue" : "white",
+              color: backButtonEnabled ? "white" : "black",
+              border: "1px solid #ccc",
+              cursor: backButtonEnabled ? "pointer" : "not-allowed",
               width: "4%",
-              height:"35px",
-              fontSize:"12px",
+              height: "35px",
+              fontSize: "12px",
             }}
           >
             Back
           </button>
-          
-          <h5 style={{marginLeft:"300px"}}>Tender Purchase Head</h5>
-      
+
+          <h5 style={{ marginLeft: "300px" }}>Tender Purchase Head</h5>
         </div>
-        <div style={{ float:"right", marginTop:"-40px" }}>
+        <div style={{ float: "right", marginTop: "-40px" }}>
           <button
             style={{
-             border:"1px solid #ccc",
-              backgroundColor: highlightedButton ==="first" ?"black" :"blue",
-              color:"white",
-              width:"100px",
-              height:"35px",
+              border: "1px solid #ccc",
+              backgroundColor: highlightedButton === "first" ? "black" : "blue",
+              color: "white",
+              width: "100px",
+              height: "35px",
             }}
             onClick={() => handleButtonClick("first")}
           >
@@ -333,12 +432,12 @@ return (
           </button>
           <button
             style={{
-             border:"1px solid #ccc",
-backgroundColor:
-                highlightedButton ==="previous" ?"black" :"blue",
-              color:"white",
-              width:"100px",
-              height:"35px",
+              border: "1px solid #ccc",
+              backgroundColor:
+                highlightedButton === "previous" ? "black" : "blue",
+              color: "white",
+              width: "100px",
+              height: "35px",
             }}
             onClick={() => handleButtonClick("previous")}
           >
@@ -346,11 +445,11 @@ backgroundColor:
           </button>
           <button
             style={{
-             border:"1px solid #ccc",
-              backgroundColor: highlightedButton ==="next" ?"black" :"blue",
-              color:"white",
-              width:"100px",
-              height:"35px",
+              border: "1px solid #ccc",
+              backgroundColor: highlightedButton === "next" ? "black" : "blue",
+              color: "white",
+              width: "100px",
+              height: "35px",
             }}
             onClick={() => handleButtonClick("next")}
           >
@@ -358,136 +457,319 @@ backgroundColor:
           </button>
           <button
             style={{
-             border:"1px solid #ccc",
-              backgroundColor: highlightedButton ==="last" ?"black" :"blue",
-              color:"white",
-              width:"100px",
-              height:"35px",
+              border: "1px solid #ccc",
+              backgroundColor: highlightedButton === "last" ? "black" : "blue",
+              color: "white",
+              width: "100px",
+              height: "35px",
             }}
             onClick={() => handleButtonClick("last")}
           >
             &gt;&gt;
           </button>
-  </div>
-  </div>
-<div className="d-flex">
-<div className="col-md-1 d-flex align-items-center">
-<label className="form-label">Tender No:</label>
- <input type="text" className="form-control" name="Tender_No" value={formData.Tender_No} onChange={handleInputChange} autoComplete="off"/></div> <label className="form-label ms-1">Resale/Mill:</label>
- <div className="col-md-1 d-flex ">
-   <select name="type" className="form-select" value={formData.type} onChange={handleInputChange}  autoComplete="off" style={{ width: "50", height: "35px" }}>
-     <option value="R">Resale/Mill</option>
-   </select>
- </div>
- <label className="form-label ms-1">Temp Tender:</label>
- <div className="col-md-1 d-flex ">
-   <select name="Temptender" className="form-select" value={formData.type} onChange={handleInputChange}  autoComplete="off" style={{ width: "50", height: "35px" }}>
-     <option value="R">Temp Tender</option>
-   </select>
- </div>
- <label className="form-label ms-1">Auto Purchase Bill:</label>
- <div className="col-md-1 d-flex ">
-   <select name="AutoPurchaseBill" className="form-select" value={formData.type} onChange={handleInputChange}  autoComplete="off" style={{ width: "50", height: "35px" }}>
-     <option value="R">Auto Purchase Bill</option>
-   </select>
- </div>
-       <label >Date:</label>
- <div className="form-group">
-  <div className="col-sm-12">
-     <input
-       type="date"
-       className = "form-control"
-       id = "datePicker"
-       onChange={handleTender_DateChange}
-       value={formData.Tender_Date}
-       Min = "2023-04-01"
-       Max = "2024-03-31"
-     />
-   </div>
- </div>
-       <label >Payment Date:</label>
- <div className="form-group">
-  <div className="col-sm-12">
-     <input
-       type="date"
-       className = "form-control"
-       id = "datePicker"
-       onChange={handleLifting_DateChange}
-       value={formData.Lifting_Date}
-       Min = "2023-04-01"
-       Max = "2024-03-31"
-     />
-   </div>
- </div>
-</div>
-<div className="d-flex">
-<label className="form-label">Mill Code:</label>
-<ApiMill_Code acType='M' companyCode={1} name="Mill_Code"/>
-<div className="col-md-1 d-flex align-items-center">
-<label className="form-label">Season:</label>
- <input type="text" className="form-control" name="season" value={formData.season} onChange={handleInputChange} autoComplete="off"/></div><label className="form-label">Item Code:</label>
-<Apiitemcode acType='M' companyCode={1} name="itemcode"/>
-</div>
-<div className="d-flex">
-<label className="form-label">Grade:</label>
-<ApiGrade acType='M' companyCode={1} name="Grade"/>
-<div className="col-md-1 d-flex align-items-center">
-<label className="form-label">Quintal:</label>
- <input type="text" className="form-control" name="Quantal" value={formData.Quantal} onChange={handleInputChange} autoComplete="off"/></div><div className="col-md-1 d-flex align-items-center">
-<label className="form-label">Packing:</label>
- <input type="text" className="form-control" name="Packing" value={formData.Packing} onChange={handleInputChange} autoComplete="off"/></div><div className="col-md-1 d-flex align-items-center">
-<label className="form-label">Bags:</label>
- <input type="text" className="form-control" name="Bags" value={formData.Bags} onChange={handleInputChange} autoComplete="off"/></div><div className="col-md-1 d-flex align-items-center">
-<label className="form-label">Mill Rate:</label>
- <input type="text" className="form-control" name="Mill_Rate" value={formData.Mill_Rate} onChange={handleInputChange} autoComplete="off"/></div><div className="col-md-1 d-flex align-items-center">
-<label className="form-label">Purchase Rate:</label>
- <input type="text" className="form-control" name="Purc_Rate" value={formData.Purc_Rate} onChange={handleInputChange} autoComplete="off"/></div><div className="col-md-1 d-flex align-items-center">
-<label className="form-label">Party Bill Rate:</label>
- <input type="text" className="form-control" name="Party_Bill_Rate" value={formData.Party_Bill_Rate} onChange={handleInputChange} autoComplete="off"/></div></div>
-<div className="d-flex">
-<label className="form-label">Bp Account:</label>
-<ApiBp_Account acType='M' companyCode={1} name="Bp_Account"/>
-<div className="col-md-1 d-flex align-items-center">
-<label className="form-label">B.P:</label>
- <input type="text" className="form-control" name="CashDiff" value={formData.CashDiff} onChange={handleInputChange} autoComplete="off"/></div></div>
-<div className="d-flex">
-<label className="form-label">Payment To:</label>
-<ApiPayment_To acType='M' companyCode={1} name="Payment_To"/>
-<label className="form-label">Tender From:</label>
-<ApiTender_From acType='M' companyCode={1} name="Tender_From"/>
-</div>
-<div className="d-flex">
-<label className="form-label">Tender DO:</label>
-<ApiTender_DO acType='M' companyCode={1} name="Tender_DO"/>
-<label className="form-label">Voucher By:</label>
-<ApiVoucher_By acType='M' companyCode={1} name="Voucher_By"/>
-</div>
-<div className="d-flex">
-<label className="form-label">Broker:</label>
-<ApiBroker acType='M' companyCode={1} name="Broker"/>
-<div className="col-md-1 d-flex align-items-center">
-<label className="form-label">Brokrage:</label>
- <input type="text" className="form-control" name="Brokrage" value={formData.Brokrage} onChange={handleInputChange} autoComplete="off"/></div><label className="form-label">Gst Rate Code:</label>
-<Apigstratecode acType='M' companyCode={1} name="gstratecode"/>
-<div className="col-md-1 d-flex align-items-center">
-<label className="form-label">Gst Rate:</label>
- <input type="text" className="form-control" name="Excise_Rate" value={formData.Excise_Rate} onChange={handleInputChange} autoComplete="off"/></div><div className="col-md-1 d-flex align-items-center">
-<label className="form-label">Sale Note Number:</label>
- <input type="text" className="form-control" name="Sell_Note_No" value={formData.Sell_Note_No} onChange={handleInputChange} autoComplete="off"/></div></div>
-<div className="d-flex">
-<div className="col-md-1 d-flex align-items-center">
-<label className="form-label">Narration:</label>
- <input type="text" className="form-control" name="Narration" value={formData.Narration} onChange={handleInputChange} autoComplete="off"/></div><div className="col-md-1 d-flex align-items-center">
-<label className="form-label">TCS:</label>
- <input type="text" className="form-control" name="TCS_Rate" value={formData.TCS_Rate} onChange={handleInputChange} autoComplete="off"/></div><div className="col-md-1 d-flex align-items-center">
-<label className="form-label">TCS Amount:</label>
- <input type="text" className="form-control" name="TCS_Amt" value={formData.TCS_Amt} onChange={handleInputChange} autoComplete="off"/></div><div className="col-md-1 d-flex align-items-center">
-<label className="form-label">TDS :</label>
- <input type="text" className="form-control" name="TDS_Rate" value={formData.TDS_Rate} onChange={handleInputChange} autoComplete="off"/></div><div className="col-md-1 d-flex align-items-center">
-<label className="form-label">TDS Amount:</label>
- <input type="text" className="form-control" name="TDS_Amt" value={formData.TDS_Amt} onChange={handleInputChange} autoComplete="off"/></div></div>
-</>
-);
-};
-export default Text1
+        </div>
+      </div>
+      <form onSubmit={handleSubmit}>
+      <div className="d-flex">
+        <div className="col-md-1 d-flex align-items-center">
+          <label className="form-label">Tender No:</label>
+          <input
+            type="text"
+            className="form-control"
+            name="Tender_No"
+            value={formData.Tender_No}
+            onChange={handleInputChange}
+            autoComplete="off"
+            readOnly
+          />
+        </div>
 
+        <label className="form-label ms-1">Resale/Mill:</label>
+        <div className="col-md-1 d-flex">
+          <select
+            name="type"
+            className="form-select"
+            value={formData.type}
+            onChange={handleInputChange}
+            autoComplete="off"
+            style={{ width: "50", height: "35px" }}
+          >
+            <option value="R">Resale/Mill</option>
+          </select>
+        </div>
+
+        <label className="form-label ms-1">Temp Tender:</label>
+        <div className="col-md-1 d-flex">
+          <select
+            name="Temptender"
+            className="form-select"
+            value={formData.type}
+            onChange={handleInputChange}
+            autoComplete="off"
+            style={{ width: "50", height: "35px" }}
+          >
+            <option value="R">Temp Tender</option>
+          </select>
+        </div>
+
+        <label className="form-label ms-1">Auto Purchase Bill:</label>
+        <div className="col-md-1 d-flex">
+          <select
+            name="AutoPurchaseBill"
+            className="form-select"
+            value={formData.type}
+            onChange={handleInputChange}
+            autoComplete="off"
+            style={{ width: "50", height: "35px" }}
+          >
+            <option value="R">Auto Purchase Bill</option>
+          </select>
+        </div>
+
+        <label>Date:</label>
+        <div className="form-group">
+          <div className="col-sm-12">
+            <input
+              type="date"
+              className="form-control"
+              id="datePicker"
+              onChange={handleTender_DateChange}
+              value={formData.Tender_Date}
+              Min="2023-04-01"
+              Max="2024-03-31"
+            />
+          </div>
+        </div>
+
+        <label>Payment Date:</label>
+        <div className="form-group">
+          <div className="col-sm-12">
+            <input
+              type="date"
+              className="form-control"
+              id="datePicker"
+              onChange={handleLifting_DateChange}
+              value={formData.Lifting_Date}
+              Min="2023-04-01"
+              Max="2024-03-31"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div className="d-flex">
+        <label className="form-label">Mill Code:</label>
+        <ApiMill_Code acType="M" companyCode={1} name="Mill_Code" onAcCodeClick={handleMillCode} />
+        <div className="col-md-1 d-flex align-items-center">
+          <label className="form-label">Season:</label>
+          <input
+            type="text"
+            className="form-control"
+            name="season"
+            value={formData.season}
+            onChange={handleInputChange}
+            autoComplete="off"
+          />
+        </div>
+        <label className="form-label">Item Code:</label>
+        <Apiitemcode acType="M" companyCode={1} name="itemcode" />
+      </div>
+      {/* <div className="d-flex">
+        <label className="form-label">Grade:</label>
+        <ApiGrade acType="M" companyCode={1} name="Grade" />
+        <div className="col-md-1 d-flex align-items-center">
+          <label className="form-label">Quintal:</label>
+          <input
+            type="text"
+            className="form-control"
+            name="Quantal"
+            value={formData.Quantal}
+            onChange={handleInputChange}
+            autoComplete="off"
+          />
+        </div>
+        <div className="col-md-1 d-flex align-items-center">
+          <label className="form-label">Packing:</label>
+          <input
+            type="text"
+            className="form-control"
+            name="Packing"
+            value={formData.Packing}
+            onChange={handleInputChange}
+            autoComplete="off"
+          />
+        </div>
+        <div className="col-md-1 d-flex align-items-center">
+          <label className="form-label">Bags:</label>
+          <input
+            type="text"
+            className="form-control"
+            name="Bags"
+            value={formData.Bags}
+            onChange={handleInputChange}
+            autoComplete="off"
+          />
+        </div>
+        <div className="col-md-1 d-flex align-items-center">
+          <label className="form-label">Mill Rate:</label>
+          <input
+            type="text"
+            className="form-control"
+            name="Mill_Rate"
+            value={formData.Mill_Rate}
+            onChange={handleInputChange}
+            autoComplete="off"
+          />
+        </div>
+        <div className="col-md-1 d-flex align-items-center">
+          <label className="form-label">Purchase Rate:</label>
+          <input
+            type="text"
+            className="form-control"
+            name="Purc_Rate"
+            value={formData.Purc_Rate}
+            onChange={handleInputChange}
+            autoComplete="off"
+          />
+        </div>
+        <div className="col-md-1 d-flex align-items-center">
+          <label className="form-label">Party Bill Rate:</label>
+          <input
+            type="text"
+            className="form-control"
+            name="Party_Bill_Rate"
+            value={formData.Party_Bill_Rate}
+            onChange={handleInputChange}
+            autoComplete="off"
+          />
+        </div>
+      </div>
+
+      <div className="d-flex">
+        <label className="form-label">Bp Account:</label>
+        <ApiBp_Account acType="M" companyCode={1} name="Bp_Account" />
+        <div className="col-md-1 d-flex align-items-center">
+          <label className="form-label">B.P:</label>
+          <input
+            type="text"
+            className="form-control"
+            name="CashDiff"
+            value={formData.CashDiff}
+            onChange={handleInputChange}
+            autoComplete="off"
+          />
+        </div>
+      </div>
+      <div className="d-flex">
+        <label className="form-label">Payment To:</label>
+        <ApiPayment_To acType="M" companyCode={1} name="Payment_To" />
+        <label className="form-label">Tender From:</label>
+        <ApiTender_From acType="M" companyCode={1} name="Tender_From" />
+      </div>
+      <div className="d-flex">
+        <label className="form-label">Tender DO:</label>
+        <ApiTender_DO acType="M" companyCode={1} name="Tender_DO" />
+        <label className="form-label">Voucher By:</label>
+        <ApiVoucher_By acType="M" companyCode={1} name="Voucher_By" />
+      </div>
+      <div className="d-flex">
+        <label className="form-label">Broker:</label>
+        <ApiBroker acType="M" companyCode={1} name="Broker" />
+        <div className="col-md-1 d-flex align-items-center">
+          <label className="form-label">Brokrage:</label>
+          <input
+            type="text"
+            className="form-control"
+            name="Brokrage"
+            value={formData.Brokrage}
+            onChange={handleInputChange}
+            autoComplete="off"
+          />
+        </div>
+        <label className="form-label">Gst Rate Code:</label>
+        <Apigstratecode acType="M" companyCode={1} name="gstratecode" />
+        <div className="col-md-1 d-flex align-items-center">
+          <label className="form-label">Gst Rate:</label>
+          <input
+            type="text"
+            className="form-control"
+            name="Excise_Rate"
+            value={formData.Excise_Rate}
+            onChange={handleInputChange}
+            autoComplete="off"
+          />
+        </div>
+        <div className="col-md-1 d-flex align-items-center">
+          <label className="form-label">Sale Note Number:</label>
+          <input
+            type="text"
+            className="form-control"
+            name="Sell_Note_No"
+            value={formData.Sell_Note_No}
+            onChange={handleInputChange}
+            autoComplete="off"
+          />
+        </div>
+      </div>
+      <div className="d-flex">
+        <div className="col-md-1 d-flex align-items-center">
+          <label className="form-label">Narration:</label>
+          <input
+            type="text"
+            className="form-control"
+            name="Narration"
+            value={formData.Narration}
+            onChange={handleInputChange}
+            autoComplete="off"
+          />
+        </div>
+        <div className="col-md-1 d-flex align-items-center">
+          <label className="form-label">TCS:</label>
+          <input
+            type="text"
+            className="form-control"
+            name="TCS_Rate"
+            value={formData.TCS_Rate}
+            onChange={handleInputChange}
+            autoComplete="off"
+          />
+        </div>
+        <div className="col-md-1 d-flex align-items-center">
+          <label className="form-label">TCS Amount:</label>
+          <input
+            type="text"
+            className="form-control"
+            name="TCS_Amt"
+            value={formData.TCS_Amt}
+            onChange={handleInputChange}
+            autoComplete="off"
+          />
+        </div>
+        <div className="col-md-1 d-flex align-items-center">
+          <label className="form-label">TDS :</label>
+          <input
+            type="text"
+            className="form-control"
+            name="TDS_Rate"
+            value={formData.TDS_Rate}
+            onChange={handleInputChange}
+            autoComplete="off"
+          />
+        </div>
+        <div className="col-md-1 d-flex align-items-center">
+          <label className="form-label">TDS Amount:</label>
+          <input
+            type="text"
+            className="form-control"
+            name="TDS_Amt"
+            value={formData.TDS_Amt}
+            onChange={handleInputChange}
+            autoComplete="off"
+          />
+        </div>
+      </div> */}
+      </form>
+    </>
+  );
+};
+export default Text1;

@@ -6,7 +6,6 @@ import axios from "axios";
 import "../../App.css";
 
 var lActiveInputFeild = "";
-var mc ="";
 const ApiDataTableModal = ({
   onAcCodeClick,
   onBrokerButtonClick,
@@ -17,8 +16,6 @@ const ApiDataTableModal = ({
   const [popupContent, setPopupContent] = useState([]);
   const [enteredAcCode, setEnteredAcCode] = useState("");
   const [enteredAcName, setEnteredAcName] = useState("");
-  const [enteredAccoid, setEnteredAccoid] = useState("");
-
   const [enteredBrokerCode, setEnteredBrokerCode] = useState("");
   const [enteredBrokerName, setEnteredBrokerName] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
@@ -30,10 +27,9 @@ const ApiDataTableModal = ({
 
   //getting data from API's
   const fetchAndOpenPopup = async (acType) => {
-    const Comapny_Code=1
     try {
       const response = await axios.get(
-        `http://localhost:5000/groupmaster/gethelper?Ac_type=${acType}&Company_Code=${Comapny_Code}`
+        `http://localhost:5000/groupmaster/gethelper?Ac_type=${acType}?Company_Code=1`
       );
       const data = response.data;
       setPopupContent(data);
@@ -86,39 +82,24 @@ const ApiDataTableModal = ({
     setShowModal(false);
   };
 
-
-  
-
   //handle onChange event for Mill Code,Broker Code and Bp Account
   const handleAcCodeChange = (event) => {
     const { value } = event.target;
     setEnteredAcCode(value);
-    const matchingItem = popupContent.find((item) => item.Ac_Code === parseInt(value, 10));
-    fetchAndOpenPopup("M")
-    if (matchingItem) {
-      setEnteredAcName(matchingItem.Ac_Name_E);
-      setEnteredAccoid(matchingItem.accoid);
-      mc = matchingItem.accoid;
-      console.log("mc code is:",mc)
-      console.log("Ac_Name_E:", matchingItem.Ac_Name_E);
-      // console.log("accoid:", matchingItem.accoid);
-    } else {
-      setEnteredAcName(""); 
-      setEnteredAccoid(""); 
-    }
+    const matchingItem = popupContent.find(
+      (item) => item.Ac_Code === parseInt(value, 10)
+    );
+    setEnteredAcName(matchingItem ? matchingItem.Ac_Name_E : "");
   };
-
 
   const handleBrokerCodeChange = (event) => {
     const { value } = event.target;
 
     setEnteredBrokerCode(value);
-    
+
     const matchingItems = popupContent.find(
-      
       (item) => item.Ac_Code === parseInt(value, 10)
     );
-    fetchAndOpenPopup()
     setEnteredBrokerName(matchingItems ? matchingItems.Ac_Name_E : "");
   };
 
@@ -137,8 +118,7 @@ const ApiDataTableModal = ({
   const handleRecordDoubleClick = (item) => {
     if (lActiveInputFeild === "millCodeInput") {
       setEnteredAcCode(item.Ac_Code);
-      mc = item.accoid;
-      console.log("mc code is:",mc);
+      console.log(item.Ac_Code);
       setEnteredAcName(item.Ac_Name_E);
       if (onAcCodeClick) {
         onAcCodeClick(item.Ac_Code);
@@ -173,8 +153,7 @@ const ApiDataTableModal = ({
   };
 
   const filteredData = popupContent.filter((item) =>
-    item.Ac_Name_E.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    item.Gst_No.toLowerCase().includes(searchTerm.toLowerCase())
+    item.Ac_Name_E.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -184,13 +163,11 @@ const ApiDataTableModal = ({
 
   //f1 popup open on f1 key press and arrow up and down functionality
   useEffect(() => {
-    const handleKeyEvents = (event,item) => {
+    const handleKeyEvents = (event) => {
       if (event.key === "F1") {
         if (event.target.id === "millCodeInput") {
-        
+          lActiveInputFeild = "millCodeInput";
           fetchAndOpenPopup("M");
-          // var mc = item.accoid
-          // console.log("mc code is:",mc);
           event.preventDefault();
         } else if (event.target.id === "brokerCodeInput") {
           lActiveInputFeild = "brokerCodeInput";
@@ -331,9 +308,9 @@ const ApiDataTableModal = ({
                   <tr>
                     <th>Account Code</th>
                     <th>Account Name</th>
-                    <th>City</th>
-                    <th>Gst No</th>
-                    <th>Acco Id</th>
+                    <th>Account Type</th>
+                    <th>City Name</th>
+                    <th>Address</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -347,9 +324,9 @@ const ApiDataTableModal = ({
                     >
                       <td>{item.Ac_Code}</td>
                       <td>{item.Ac_Name_E}</td>
+                      <td>{item.Ac_type}</td>
                       <td>{item.cityname}</td>
-                      <td>{item.Gst_No}</td>
-                      <td>{item.accoid}</td>
+                      <td>{item.Address_E}</td>
                     </tr>
                   ))}
                 </tbody>
