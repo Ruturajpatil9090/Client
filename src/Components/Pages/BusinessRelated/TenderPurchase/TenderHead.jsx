@@ -16,7 +16,9 @@ import ApiBroker from "../../../commonFunctions/ApiAccountHelp";
 import Apigstratecode from "../../../commonFunctions/ApiAccountHelp";
 //import Import Detail Component.........................................;
 
-const Text1 = () => {
+var newTenderid = ""
+var MillCodeNew = ""
+const Text1 = ({millData}) => {
   const navigate = useNavigate();
   const addNewButtonRef = useRef(null);
   const resaleMillDropdownRef = useRef(null);
@@ -36,6 +38,12 @@ const Text1 = () => {
   const [tender_date, setTender_Date] = useState(null);
   const [lifting_date, setLifting_Date] = useState(null);
   const [millCode, setMillCode] = useState("");
+
+  const [tenderId, setTenderId] = useState("");
+
+
+  const [records, setRecords] = useState([]); 
+  const [currentRecordIndex, setCurrentRecordIndex] = useState(0); 
 
   const [formData, setFormData] = useState({
     Tender_No: "",
@@ -107,7 +115,14 @@ const Text1 = () => {
     if (resaleMillDropdownRef.current) {
       resaleMillDropdownRef.current.focus();
     }
+    getLatestTenderNo();
+    setFormData(prevFormData => ({ ...prevFormData, Bags: "" }));
+    MillCodeNew=""
+   
+    
   };
+
+
   const handleEdit = () => {
     setIsEditMode(true);
     setAddOneButtonEnabled(false);
@@ -124,7 +139,7 @@ const Text1 = () => {
 
   useEffect(() => {
     getLatestTenderNo();
-    getData()
+    
   }, []);
 
   const getLatestTenderNo = () => {
@@ -145,52 +160,72 @@ const Text1 = () => {
   };
 
 
-  // const getData = async () => {
-  //   try {
-  //     const response = await axios.get("http://localhost:5000/groupmaster/getalltenderdata");
-  //     const responseData = response.data;
-  
-  //     if (responseData.headData && responseData.detailData) {
-  //       const headData = responseData.headData;
-  //       const detailData = responseData.detailData;
-  
-  //       console.log("Head Data:", headData);
-  //       console.log("Detail Data:", detailData);
-  //     } else {
-  //       console.error("Invalid response format.");
-  //     }
-  //   } catch (error) {
-  //     console.error("Error fetching data:", error.message);
-  //   }
-  // };
-
-
   const getData = async () => {
+    const Company_Code = 1;
+    const Year_Code = 3;
+  
     try {
-      const response = await axios.get("http://localhost:5000/groupmaster/getalltenderdata");
-      const responseData = response.data;
+      const response = await axios.get(`http://localhost:5000/groupmaster/getTenderone?Company_Code=${Company_Code}&Year_Code=${Year_Code}`);
+      const lastRecord = response.data[0];
+      console.log("data",lastRecord.TDS_Amt)
+      console.log("data",lastRecord.Mill_Code)
+      console.log("data",lastRecord.tenderid)
+        newTenderid = lastRecord.tenderid
+        MillCodeNew = lastRecord.Mill_Code
   
-      if (responseData.headData && responseData.headData.length > 0) {
-  
-        const lastRecord = responseData.headData[responseData.headData -1];
-        console.log("last record",lastRecord)
-
         setFormData({
-          ...lastRecord,
+          millCode: lastRecord.Mill_Code || "",
+          TDS_Amt: lastRecord.TDS_Amt || "",
+          Tender_No: lastRecord.Tender_No || "",
+          Bags: lastRecord.Bags || "",
+          
         });
-      } else {
-        console.error("No records found in headData.");
-      }
+      console.log("tender",newTenderid)
+      
     } catch (error) {
       console.error("Error fetching data:", error.message);
     }
   };
   
-  
+
+
   const handleSaveOrUpdate = () => {
     const apiUrlSaveOrUpdate = "http://localhost:5000/groupmaster/inserttender";
   
     if (isEditMode) {
+      const updateApiUrl = `http://localhost:5000/groupmaster/updatetender?tenderid=${newTenderid}`; 
+      console.log(updateApiUrl)
+
+      const postData = {
+        headData: {
+          Tender_No: formData.Tender_No,
+          Company_Code: 1,
+          Year_Code: 3,
+          Mill_Code: millCode,
+          Bags: formData.Bags
+        
+        },
+        detailData: [
+          {
+            Tender_No: formData.Tender_No,
+            Company_Code: 1,
+            year_code: 3,
+            ID: 1,
+          },
+        ],
+      };
+      
+
+    axios
+      .put(updateApiUrl, postData) 
+      .then((response) => {
+        console.log("Data updated successfully:", response.data);
+        window.location.reload()
+      })
+      .catch((error) => {
+        console.error("Error updating data:", error);
+      });
+
       setIsEditMode(false);
       setAddOneButtonEnabled(true);
       setEditButtonEnabled(true);
@@ -204,8 +239,10 @@ const Text1 = () => {
         headData: {
           Tender_No: formData.Tender_No,
           Company_Code: 1,
-          Year_Code: 1,
+          Year_Code: 3,
           Mill_Code: millCode,
+          // Mill_Rate:formData.Mill_Rate,
+          Bags:formData.Bags
 
          
         },
@@ -213,7 +250,7 @@ const Text1 = () => {
           {
             Tender_No: formData.Tender_No,
             Company_Code: 1,
-            year_code: 1,
+            year_code: 3,
             ID: 1,
           }
         ]
@@ -232,6 +269,7 @@ const Text1 = () => {
           setCancelButtonEnabled(false);
           addNewButtonRef.current.focus();
           setSaveButtonClicked(true);
+          window.location.reload()
         })
         .catch((error) => {
           console.error("Error saving data:", error);
@@ -244,6 +282,7 @@ const Text1 = () => {
   const handleBack = () => {
     navigate("/business/tender_utility");
   };
+
   const handleDelete = () => {
     setIsEditMode(false);
     setAddOneButtonEnabled(true);
@@ -262,13 +301,17 @@ const Text1 = () => {
     setSaveButtonEnabled(false);
     setCancelButtonEnabled(false);
     setCancelButtonClicked(true);
+    getData();
+    setMillCode(MillCodeNew)
   };
+
   const handleSubmit = (event) => {
     event.preventDefault();
   };
   const handleButtonClick = (button) => {
     setHighlightedButton(button);
   };
+
   const handleKeyDown = (event, handler) => {
     if (event.key === "Enter") {
       handler();
@@ -287,6 +330,28 @@ const handleMillCode=(code)=>{
 }
 
 
+const handleFirstButtonClick = () => {
+  setCurrentRecordIndex(0);
+};
+
+// Function to fetch the last record
+const handleLastButtonClick = () => {
+  setCurrentRecordIndex(records.length - 1);
+};
+
+// Function to fetch the next record
+const handleNextButtonClick = () => {
+  if (currentRecordIndex < records.length - 1) {
+    setCurrentRecordIndex((prevIndex) => prevIndex + 1);
+  }
+};
+
+// Function to fetch the previous record
+const handlePreviousButtonClick = () => {
+  if (currentRecordIndex > 0) {
+    setCurrentRecordIndex((prevIndex) => prevIndex - 1);
+  }
+};
 
   return (
     <>
@@ -426,7 +491,7 @@ const handleMillCode=(code)=>{
               width: "100px",
               height: "35px",
             }}
-            onClick={() => handleButtonClick("first")}
+            onClick={() => handleFirstButtonClick()}
           >
             &lt;&lt;
           </button>
@@ -439,7 +504,7 @@ const handleMillCode=(code)=>{
               width: "100px",
               height: "35px",
             }}
-            onClick={() => handleButtonClick("previous")}
+            onClick={() => handlePreviousButtonClick()}
           >
             &lt;
           </button>
@@ -451,7 +516,7 @@ const handleMillCode=(code)=>{
               width: "100px",
               height: "35px",
             }}
-            onClick={() => handleButtonClick("next")}
+            onClick={() => handleNextButtonClick()}
           >
             &gt;
           </button>
@@ -463,7 +528,7 @@ const handleMillCode=(code)=>{
               width: "100px",
               height: "35px",
             }}
-            onClick={() => handleButtonClick("last")}
+            onClick={() => handleLastButtonClick()}
           >
             &gt;&gt;
           </button>
@@ -559,7 +624,8 @@ const handleMillCode=(code)=>{
 
       <div className="d-flex">
         <label className="form-label">Mill Code:</label>
-        <ApiMill_Code acType="M" companyCode={1} name="Mill_Code" onAcCodeClick={handleMillCode} />
+        <ApiMill_Code acType="M" companyCode={1} name="Mill_Code" onAcCodeClick={handleMillCode} millData={MillCodeNew}  handleCancel={handleCancel} />
+ 
         <div className="col-md-1 d-flex align-items-center">
           <label className="form-label">Season:</label>
           <input
@@ -574,32 +640,8 @@ const handleMillCode=(code)=>{
         <label className="form-label">Item Code:</label>
         <Apiitemcode acType="M" companyCode={1} name="itemcode" />
       </div>
-      {/* <div className="d-flex">
-        <label className="form-label">Grade:</label>
-        <ApiGrade acType="M" companyCode={1} name="Grade" />
-        <div className="col-md-1 d-flex align-items-center">
-          <label className="form-label">Quintal:</label>
-          <input
-            type="text"
-            className="form-control"
-            name="Quantal"
-            value={formData.Quantal}
-            onChange={handleInputChange}
-            autoComplete="off"
-          />
-        </div>
-        <div className="col-md-1 d-flex align-items-center">
-          <label className="form-label">Packing:</label>
-          <input
-            type="text"
-            className="form-control"
-            name="Packing"
-            value={formData.Packing}
-            onChange={handleInputChange}
-            autoComplete="off"
-          />
-        </div>
-        <div className="col-md-1 d-flex align-items-center">
+
+      <div className="col-md-1 d-flex align-items-center">
           <label className="form-label">Bags:</label>
           <input
             type="text"
@@ -610,164 +652,7 @@ const handleMillCode=(code)=>{
             autoComplete="off"
           />
         </div>
-        <div className="col-md-1 d-flex align-items-center">
-          <label className="form-label">Mill Rate:</label>
-          <input
-            type="text"
-            className="form-control"
-            name="Mill_Rate"
-            value={formData.Mill_Rate}
-            onChange={handleInputChange}
-            autoComplete="off"
-          />
-        </div>
-        <div className="col-md-1 d-flex align-items-center">
-          <label className="form-label">Purchase Rate:</label>
-          <input
-            type="text"
-            className="form-control"
-            name="Purc_Rate"
-            value={formData.Purc_Rate}
-            onChange={handleInputChange}
-            autoComplete="off"
-          />
-        </div>
-        <div className="col-md-1 d-flex align-items-center">
-          <label className="form-label">Party Bill Rate:</label>
-          <input
-            type="text"
-            className="form-control"
-            name="Party_Bill_Rate"
-            value={formData.Party_Bill_Rate}
-            onChange={handleInputChange}
-            autoComplete="off"
-          />
-        </div>
-      </div>
-
-      <div className="d-flex">
-        <label className="form-label">Bp Account:</label>
-        <ApiBp_Account acType="M" companyCode={1} name="Bp_Account" />
-        <div className="col-md-1 d-flex align-items-center">
-          <label className="form-label">B.P:</label>
-          <input
-            type="text"
-            className="form-control"
-            name="CashDiff"
-            value={formData.CashDiff}
-            onChange={handleInputChange}
-            autoComplete="off"
-          />
-        </div>
-      </div>
-      <div className="d-flex">
-        <label className="form-label">Payment To:</label>
-        <ApiPayment_To acType="M" companyCode={1} name="Payment_To" />
-        <label className="form-label">Tender From:</label>
-        <ApiTender_From acType="M" companyCode={1} name="Tender_From" />
-      </div>
-      <div className="d-flex">
-        <label className="form-label">Tender DO:</label>
-        <ApiTender_DO acType="M" companyCode={1} name="Tender_DO" />
-        <label className="form-label">Voucher By:</label>
-        <ApiVoucher_By acType="M" companyCode={1} name="Voucher_By" />
-      </div>
-      <div className="d-flex">
-        <label className="form-label">Broker:</label>
-        <ApiBroker acType="M" companyCode={1} name="Broker" />
-        <div className="col-md-1 d-flex align-items-center">
-          <label className="form-label">Brokrage:</label>
-          <input
-            type="text"
-            className="form-control"
-            name="Brokrage"
-            value={formData.Brokrage}
-            onChange={handleInputChange}
-            autoComplete="off"
-          />
-        </div>
-        <label className="form-label">Gst Rate Code:</label>
-        <Apigstratecode acType="M" companyCode={1} name="gstratecode" />
-        <div className="col-md-1 d-flex align-items-center">
-          <label className="form-label">Gst Rate:</label>
-          <input
-            type="text"
-            className="form-control"
-            name="Excise_Rate"
-            value={formData.Excise_Rate}
-            onChange={handleInputChange}
-            autoComplete="off"
-          />
-        </div>
-        <div className="col-md-1 d-flex align-items-center">
-          <label className="form-label">Sale Note Number:</label>
-          <input
-            type="text"
-            className="form-control"
-            name="Sell_Note_No"
-            value={formData.Sell_Note_No}
-            onChange={handleInputChange}
-            autoComplete="off"
-          />
-        </div>
-      </div>
-      <div className="d-flex">
-        <div className="col-md-1 d-flex align-items-center">
-          <label className="form-label">Narration:</label>
-          <input
-            type="text"
-            className="form-control"
-            name="Narration"
-            value={formData.Narration}
-            onChange={handleInputChange}
-            autoComplete="off"
-          />
-        </div>
-        <div className="col-md-1 d-flex align-items-center">
-          <label className="form-label">TCS:</label>
-          <input
-            type="text"
-            className="form-control"
-            name="TCS_Rate"
-            value={formData.TCS_Rate}
-            onChange={handleInputChange}
-            autoComplete="off"
-          />
-        </div>
-        <div className="col-md-1 d-flex align-items-center">
-          <label className="form-label">TCS Amount:</label>
-          <input
-            type="text"
-            className="form-control"
-            name="TCS_Amt"
-            value={formData.TCS_Amt}
-            onChange={handleInputChange}
-            autoComplete="off"
-          />
-        </div>
-        <div className="col-md-1 d-flex align-items-center">
-          <label className="form-label">TDS :</label>
-          <input
-            type="text"
-            className="form-control"
-            name="TDS_Rate"
-            value={formData.TDS_Rate}
-            onChange={handleInputChange}
-            autoComplete="off"
-          />
-        </div>
-        <div className="col-md-1 d-flex align-items-center">
-          <label className="form-label">TDS Amount:</label>
-          <input
-            type="text"
-            className="form-control"
-            name="TDS_Amt"
-            value={formData.TDS_Amt}
-            onChange={handleInputChange}
-            autoComplete="off"
-          />
-        </div>
-      </div> */}
+     
       </form>
     </>
   );

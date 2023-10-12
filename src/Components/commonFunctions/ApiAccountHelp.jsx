@@ -7,7 +7,7 @@ import "../../App.css";
 
 var lActiveInputFeild = "";
 var mc = "";
-const ApiDataTableModal = ({ onAcCodeClick, acType,name,companyCode }) => {
+const ApiDataTableModal = ({ onAcCodeClick, acType,name,companyCode,millData,handleCancel}) => {
    //Manage the states of applications
   const [showModal, setShowModal] = useState(false);
   const [popupContent, setPopupContent] = useState([]);
@@ -20,6 +20,11 @@ const ApiDataTableModal = ({ onAcCodeClick, acType,name,companyCode }) => {
 
   const [selectedRowIndex, setSelectedRowIndex] = useState(-1);
 
+  const [apiDataFetched, setApiDataFetched] = useState(false);
+
+
+  console.log("milldata code",millData)
+    
 
   // Fetch data based on acType
   const fetchAndOpenPopup = async () => {
@@ -35,6 +40,25 @@ const ApiDataTableModal = ({ onAcCodeClick, acType,name,companyCode }) => {
       console.error("Error fetching data:", error);
     }
   };
+
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+      //  await fetchAndOpenPopup();
+        setShowModal(false);  
+        setApiDataFetched(true);  
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+  
+    if (!apiDataFetched) {
+      fetchData();
+    }
+
+  }, [apiDataFetched]);  
   
   // Handle Mill Code button click
   const handleMillCodeButtonClick = () => {
@@ -113,12 +137,12 @@ const ApiDataTableModal = ({ onAcCodeClick, acType,name,companyCode }) => {
 
   // Handle key events
   useEffect(() => {
+    
     const handleKeyEvents = async (event) => {
       if (event.key === "F1" && acType) {
         if (event.target.id === name) {
           lActiveInputFeild = name
           fetchAndOpenPopup();
-          
           event.preventDefault();
         }
       } else if (event.key === "ArrowUp" ) {
@@ -155,7 +179,7 @@ const ApiDataTableModal = ({ onAcCodeClick, acType,name,companyCode }) => {
             className="form-control ms-2"
             id={name}
             autoComplete="off"
-            value={enteredAcCode}
+            value={enteredAcCode || millData}
             onChange={handleAcCodeChange}
             style={{ width: "150px", height: "35px" }}
           />
